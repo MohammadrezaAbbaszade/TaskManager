@@ -1,0 +1,190 @@
+package com.example.completetask.fragments;
+
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.example.completetask.R;
+import com.example.completetask.model.Doing;
+import com.example.completetask.model.DoingListsRepository;
+import com.example.completetask.model.ToDo;
+import com.example.completetask.model.ToDoListsRepository;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
+import java.util.UUID;
+
+
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class DoingListFragment extends Fragment {
+    private final String DIALOG_FRAGMENT_TAG = "com.example.completetask.fragments.dialogFragmentTag";
+    private final int REQUEST_FOR_DIALOGFRAGMENT = 3;
+    private final String CHANGE_DIALOG_FRAGMENT_TAG = "com.example.completetask.changedialogfragment";
+    private final int REQUEST_CODE_FOR_CHANGE_FRAGMENT = 4;
+    private FloatingActionButton mFloatingActionButton;
+    private static final String USERNAME_OF_USER = "com.example.completetask.fragments.id of user";
+    private List<Doing> mDoingList;
+    private Doing mDoing;
+    String userNameOfUser;
+    private RecyclerView mRecyclerView;
+    private DoingAdaptor doingAdaptor;
+    public static DoingListFragment newInstance(String userNameOfUser) {
+
+        Bundle args = new Bundle();
+        args.putString(USERNAME_OF_USER,userNameOfUser);
+        DoingListFragment fragment = new DoingListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+    public DoingListFragment() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        userNameOfUser = getArguments().getString(USERNAME_OF_USER);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+       View view= inflater.inflate(R.layout.fragment_doing_list, container, false);
+        init(view);
+        creatRecycler();
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DiaLogFragment diaLogFragment = DiaLogFragment.newInstance();
+                diaLogFragment.setTargetFragment(DoingListFragment.this, REQUEST_FOR_DIALOGFRAGMENT);
+                diaLogFragment.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);
+            }
+        });
+        return view;
+    }
+    private void init(View view) {
+        mFloatingActionButton = view.findViewById(R.id.doing_fab);
+        mRecyclerView = view.findViewById(R.id.doing_recycler);
+
+
+    }
+    private class DoingHolder extends RecyclerView.ViewHolder {
+        private TextView mItemTitleTextView;
+        private TextView mItemDiscriptionTextView;
+        private ImageView mItemImageView;
+        private Doing mDoing;
+
+        public DoingHolder(@NonNull View itemView) {
+            super(itemView);
+            mItemTitleTextView = itemView.findViewById(R.id.item_title);
+            mItemDiscriptionTextView = itemView.findViewById(R.id.item_discription);
+            mItemImageView = itemView.findViewById(R.id.item_imageview);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ChangeDialogFragment changeDialogFragment = ChangeDialogFragment.newInstance(mDoing.getTitle()
+                            , mDoing.getDiscriptin(),mDoing.getDate(),mDoing.getTime(), userNameOfUser, mDoing.getUUID(), 3);
+                    changeDialogFragment.setTargetFragment(DoingListFragment.this, REQUEST_CODE_FOR_CHANGE_FRAGMENT);
+                    changeDialogFragment.show(getFragmentManager(), CHANGE_DIALOG_FRAGMENT_TAG);
+
+                }
+            });
+        }
+
+        public void bind(Doing doing) {
+            mItemTitleTextView.setText(doing.getTitle());
+            mItemDiscriptionTextView.setText(doing.getDiscriptin());
+            mDoing = doing;
+        }
+    }
+
+    private class DoingAdaptor extends RecyclerView.Adapter<DoingHolder> {
+        private List<Doing> mDoingList;
+        public DoingAdaptor(List<Doing> doingList) {
+            mDoingList = doingList;
+        }
+
+
+        @NonNull
+        @Override
+        public DoingHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(getActivity()).inflate(R.layout.list_items, parent, false);
+            DoingHolder doingHolder=new DoingHolder(view);
+            return doingHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull DoingHolder holder, int position) {
+            holder.bind(mDoingList.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mDoingList.size() != 0)
+                return mDoingList.size();
+
+
+            return 0;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        String[] valueFromDiaLogFragment;
+        String dateFromDialogFragment;
+        String timeFromDialogFragment;
+        if (resultCode != Activity.RESULT_OK || data == null)
+            return;
+
+        if (requestCode == REQUEST_FOR_DIALOGFRAGMENT) {
+            valueFromDiaLogFragment = data.getStringArrayExtra(DiaLogFragment.getTitleAndDiscription());
+            dateFromDialogFragment =  data.getStringExtra(DiaLogFragment.getDateFromDatepicker());
+            timeFromDialogFragment=data.getStringExtra(DiaLogFragment.newInstance().getTIME_FROM_TIMEPICKER());
+            setToDoClass(valueFromDiaLogFragment, dateFromDialogFragment,timeFromDialogFragment);
+        }
+        if (requestCode == REQUEST_CODE_FOR_CHANGE_FRAGMENT) {
+            creatRecycler();
+        }
+    }
+
+    private void setToDoClass(String[] valueFromDiaLogFragment, String dateFromDialogFragment
+            ,String timeFromDialogFragment) {
+       mDoing = new Doing();
+        if (valueFromDiaLogFragment != null) {
+            mDoing.setTitle(valueFromDiaLogFragment[0]);
+            mDoing.setDiscriptin(valueFromDiaLogFragment[1]);
+            mDoing.setUserName(userNameOfUser);
+        }
+        if (dateFromDialogFragment != null&&timeFromDialogFragment!=null) {
+            mDoing.setDate(dateFromDialogFragment);
+            mDoing.setTime(timeFromDialogFragment);
+        }
+        DoingListsRepository.getInstance().insertDoing(mDoing);
+        creatRecycler();
+    }
+
+    private void creatRecycler() {
+        mDoingList = DoingListsRepository.getInstance().getDoings(userNameOfUser);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+         doingAdaptor= new DoingAdaptor(mDoingList);
+        mRecyclerView.setAdapter(doingAdaptor);
+    }
+
+}
