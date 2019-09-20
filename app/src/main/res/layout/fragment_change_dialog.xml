@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ndroid="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".fragments.ChangeDialogFragment">
 
@@ -38,12 +39,32 @@
             android:layout_gravity="center"
             android:text="@string/setTime" />
 
-        <CheckBox
-            android:id="@+id/change_dialog_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/done" />
 
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <CheckBox
+            android:id="@+id/change_dialog_checkbox_done"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/done" />
+        <CheckBox
+            android:id="@+id/change_dialog_checkbox_doing"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/doing" />
+        <CheckBox
+            android:id="@+id/change_dialog_checkbox_todo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/todo" />
 
     </LinearLayout>
 <LinearLayout
