@@ -92,7 +92,6 @@ public class DoneListFragment extends Fragment {
             super(itemView);
             mItemTitleTextView = itemView.findViewById(R.id.item_title);
             mItemDiscriptionTextView = itemView.findViewById(R.id.item_discription);
-            mItemImageView = itemView.findViewById(R.id.item_imageview);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -79,7 +79,8 @@ public class DatePickerFragment extends DiaLogFragment {
         int monthOfYear = mDatePicker.getMonth();
         int dayOfMonth = mDatePicker.getDayOfMonth();
         String dateString = String.format("%02d/%02d/%d", monthOfYear, dayOfMonth, year);
-        return dateString;
+        Date date=new Date(dateString);
+        return date.toString();
     }
     private void sendResult(String date) {
         Fragment fragment = getTargetFragment();
