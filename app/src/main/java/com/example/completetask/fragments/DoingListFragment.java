@@ -88,13 +88,16 @@ public class DoingListFragment extends Fragment {
     private class DoingHolder extends RecyclerView.ViewHolder {
         private TextView mItemTitleTextView;
         private TextView mItemDiscriptionTextView;
-        private ImageView mItemImageView;
+        private TextView mItemDateTextView;
+        private TextView mItemShapeTextView;
         private Doing mDoing;
 
         public DoingHolder(@NonNull View itemView) {
             super(itemView);
             mItemTitleTextView = itemView.findViewById(R.id.item_title);
             mItemDiscriptionTextView = itemView.findViewById(R.id.item_discription);
+            mItemDateTextView = itemView.findViewById(R.id.item_date);
+            mItemShapeTextView = itemView.findViewById(R.id.item_shape_text);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -108,8 +111,12 @@ public class DoingListFragment extends Fragment {
         }
 
         public void bind(Doing doing) {
+            Character shapeText=doing.getTitle().charAt(0);
+            String stringForShapeText=shapeText.toString();
             mItemTitleTextView.setText(doing.getTitle());
             mItemDiscriptionTextView.setText(doing.getDiscriptin());
+            mItemShapeTextView.setText(stringForShapeText);
+            mItemDateTextView.setText(doing.getDate());
             mDoing = doing;
         }
     }

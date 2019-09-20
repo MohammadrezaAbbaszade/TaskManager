@@ -85,13 +85,16 @@ public class DoneListFragment extends Fragment {
     private class DoneHolder extends RecyclerView.ViewHolder {
         private TextView mItemTitleTextView;
         private TextView mItemDiscriptionTextView;
-        private ImageView mItemImageView;
+        private TextView mItemDateTextView;
+        private TextView mItemShapeTextView;
         private Done mDone;
 
         public DoneHolder(@NonNull View itemView) {
             super(itemView);
             mItemTitleTextView = itemView.findViewById(R.id.item_title);
             mItemDiscriptionTextView = itemView.findViewById(R.id.item_discription);
+            mItemDateTextView = itemView.findViewById(R.id.item_date);
+            mItemShapeTextView = itemView.findViewById(R.id.item_shape_text);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -105,8 +108,12 @@ public class DoneListFragment extends Fragment {
         }
 
         public void bind(Done done) {
+            Character shapeText=done.getTitle().charAt(0);
+            String stringForShapeText=shapeText.toString();
             mItemTitleTextView.setText(done.getTitle());
             mItemDiscriptionTextView.setText(done.getDiscriptin());
+            mItemShapeTextView.setText(stringForShapeText);
+            mItemDateTextView.setText(done.getDate());
             mDone = done;
         }
     }

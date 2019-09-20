@@ -78,9 +78,10 @@ public class DatePickerFragment extends DiaLogFragment {
         int year = mDatePicker.getYear();
         int monthOfYear = mDatePicker.getMonth();
         int dayOfMonth = mDatePicker.getDayOfMonth();
-        String dateString = String.format("%02d/%02d/%d", monthOfYear, dayOfMonth, year);
-        Date date=new Date(dateString);
-        return date.toString();
+        Date date=new Date(year,monthOfYear,dayOfMonth);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy"); ;
+        String dateString =formatter.format(date);
+        return dateString;
     }
     private void sendResult(String date) {
         Fragment fragment = getTargetFragment();
