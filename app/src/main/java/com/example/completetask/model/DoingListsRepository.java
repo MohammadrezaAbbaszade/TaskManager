@@ -147,15 +147,15 @@ public class DoingListsRepository {
 
     private ContentValues getContentValues(Doing doing) {
         ContentValues values = new ContentValues();
-        values.put(TaskDBSchema.ToDo.Cols.UUID, doing.getUUID().toString());
-        values.put(TaskDBSchema.ToDo.Cols.TITLE, doing.getTitle());
-        values.put(TaskDBSchema.ToDo.Cols.USERNAME, doing.getUserName());
-        values.put(TaskDBSchema.ToDo.Cols.DATE, doing.getDate());
-        values.put(TaskDBSchema.ToDo.Cols.TIME, doing.getTime());
-        values.put(TaskDBSchema.ToDo.Cols.DOINGCHECKBOX, doing.isDoing() ? 1 : 0);
-        values.put(TaskDBSchema.ToDo.Cols.DONECHECKBOX, doing.isDone() ? 1 : 0);
-        values.put(TaskDBSchema.ToDo.Cols.TODOCHECKBOX, doing.isToDo() ? 1 : 0);
-        values.put(TaskDBSchema.ToDo.Cols.DISCRIPTION, doing.getDiscriptin());
+        values.put(TaskDBSchema.Doing.Cols.UUID, doing.getUUID().toString());
+        values.put(TaskDBSchema.Doing.Cols.TITLE, doing.getTitle());
+        values.put(TaskDBSchema.Doing.Cols.USERNAME, doing.getUserName());
+        values.put(TaskDBSchema.Doing.Cols.DATE, doing.getDate());
+        values.put(TaskDBSchema.Doing.Cols.TIME, doing.getTime());
+        values.put(TaskDBSchema.Doing.Cols.DOINGCHECKBOX, doing.isDoing() ? 1 : 0);
+        values.put(TaskDBSchema.Doing.Cols.DONECHECKBOX, doing.isDone() ? 1 : 0);
+        values.put(TaskDBSchema.Doing.Cols.TODOCHECKBOX, doing.isToDo() ? 1 : 0);
+        values.put(TaskDBSchema.Doing.Cols.DISCRIPTION, doing.getDiscriptin());
 
         return values;
     }

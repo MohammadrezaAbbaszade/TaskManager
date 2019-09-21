@@ -32,7 +32,11 @@ public class Done {
     }
 
     public Done() {
-        mUUID = UUID.randomUUID();
+        this(UUID.randomUUID());
+    }
+
+    public Done(UUID uuid) {
+        mUUID = uuid;
     }
 
     public String getTitle() {
