@@ -18,11 +18,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.completetask.R;
+import com.example.completetask.model.Doing;
+import com.example.completetask.model.Done;
+import com.example.completetask.model.ToDo;
 
 import java.util.Date;
 import java.util.UUID;
@@ -34,6 +38,7 @@ public class DiaLogFragment extends DialogFragment {
     private static final String ID_OF_USER = "com.example.completetask.fragments.id of user";
     private static final String TITLE_AND_DISCRIPTION = "com.example.completetask.title and discription";
     private static final String DATE_FROM_DATEPICKER = "com.example.completetask.date from datepicker";
+    private static final String FRAGMENTS_INDEX = "fragments index";
     private final String DATE_PICKER_FRAGMENT = "com.example.completetask.datepickerfragmenttag";
     private final int REQUEST_FOR_DATEPICKER = 0;
     private final String TIME_PICKER_TAG = "com.example.completetask.timepickertag";
@@ -49,6 +54,8 @@ public class DiaLogFragment extends DialogFragment {
     private CheckBox mCheckBoxToDo;
     private CheckBox mCheckBoxDone;
     private CheckBox mCheckBoxDoing;
+    int indexOfFragments;
+
 
     public static String getDateFromDatepicker() {
         return DATE_FROM_DATEPICKER;
@@ -83,6 +90,46 @@ public class DiaLogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_dia_log, null, false);
         init(view);
+        mCheckBoxDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (mCheckBoxToDo.isChecked()) {
+                    mCheckBoxToDo.setChecked(false);
+                    mCheckBoxDone.setChecked(isChecked);
+                } else if (mCheckBoxDoing.isChecked()) {
+                    mCheckBoxDoing.setChecked(false);
+                    mCheckBoxDone.setChecked(isChecked);
+                }
+            }
+        });
+        mCheckBoxDoing.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (mCheckBoxDone.isChecked()) {
+                        mCheckBoxDone.setChecked(false);
+                        mCheckBoxDoing.setChecked(isChecked);
+                    }else if(mCheckBoxToDo.isChecked())
+                    {
+                        mCheckBoxToDo.setChecked(false);
+                        mCheckBoxDoing.setChecked(isChecked);
+                    }
+            }
+        });
+        mCheckBoxToDo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (mCheckBoxDone.isChecked()) {
+                        mCheckBoxDone.setChecked(false);
+                        mCheckBoxToDo.setChecked(isChecked);
+
+
+                    }else if(mCheckBoxDoing.isChecked()) {
+                        mCheckBoxDoing.setChecked(false);
+                        mCheckBoxToDo.setChecked(isChecked);
+                    }
+            }
+        });
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
