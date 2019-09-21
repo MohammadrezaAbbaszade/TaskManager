@@ -39,13 +39,16 @@ public class DiaLogFragment extends DialogFragment {
     private final String TIME_PICKER_TAG = "com.example.completetask.timepickertag";
     private final int REQUEST_FOR_TIMEPICKER = 1;
     private final String TIME_FROM_TIMEPICKER = "com.example.completetask.timefromtimepicker";
+    private final String CHECKBOXES_STATE = "checkBoxesSstate";
     private EditText mTtitleEditText;
     private EditText mDiscriptionEditText;
     private Button mDateButton;
     private Button mTimeButton;
-    private CheckBox mCheckBox;
     private String date;
     private String time;
+    private CheckBox mCheckBoxToDo;
+    private CheckBox mCheckBoxDone;
+    private CheckBox mCheckBoxDoing;
 
     public static String getDateFromDatepicker() {
         return DATE_FROM_DATEPICKER;
@@ -57,6 +60,10 @@ public class DiaLogFragment extends DialogFragment {
 
     public String getTIME_FROM_TIMEPICKER() {
         return TIME_FROM_TIMEPICKER;
+    }
+
+    public String getCHECKBOXES_STATE() {
+        return CHECKBOXES_STATE;
     }
 
     public static DiaLogFragment newInstance() {
@@ -96,7 +103,7 @@ public class DiaLogFragment extends DialogFragment {
                 .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        boolean[] taskState = {mCheckBoxDoing.isChecked(), mCheckBoxDone.isChecked(), mCheckBoxToDo.isChecked()};
                         String titleEditText = mTtitleEditText.getText().toString();
                         String discriptionEditText = mDiscriptionEditText.getText().toString();
                         if (titleEditText.equals("") || discriptionEditText.equals("") || date == null) {
@@ -104,7 +111,7 @@ public class DiaLogFragment extends DialogFragment {
                         } else {
                             String[] forExtra = {titleEditText, discriptionEditText};
                             if (!titleEditText.equals("") && !discriptionEditText.equals("") && date != null) {
-                                sendResult(forExtra, date,time);
+                                sendResult(forExtra,taskState, date, time);
                             }
                         }
                     }
@@ -125,16 +132,19 @@ public class DiaLogFragment extends DialogFragment {
         mDiscriptionEditText = view.findViewById(R.id.dialog_discription);
         mDateButton = view.findViewById(R.id.dialog_date);
         mTimeButton = view.findViewById(R.id.dialog_time);
-        mCheckBox = view.findViewById(R.id.dialog_checkbox);
+        mCheckBoxToDo = view.findViewById(R.id.dialog_checkbox_todo);
+        mCheckBoxDoing = view.findViewById(R.id.dialog_checkbox_doing);
+        mCheckBoxDone = view.findViewById(R.id.dialog_checkbox_done);
 
     }
 
-    private void sendResult(String[] forExtra, String date,String time) {
+    private void sendResult(String[] forExtra,boolean[] taskState, String date, String time) {
         Fragment fragment = getTargetFragment();
         Intent intent = new Intent();
+        intent.putExtra(CHECKBOXES_STATE,taskState);
         intent.putExtra(TITLE_AND_DISCRIPTION, forExtra);
         intent.putExtra(DATE_FROM_DATEPICKER, date);
-        intent.putExtra(TIME_FROM_TIMEPICKER,time);
+        intent.putExtra(TIME_FROM_TIMEPICKER, time);
         fragment.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
     }
 

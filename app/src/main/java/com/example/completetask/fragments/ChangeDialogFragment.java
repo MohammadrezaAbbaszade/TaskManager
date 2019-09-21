@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -59,7 +60,9 @@ public class ChangeDialogFragment extends DiaLogFragment {
     private Button mSaveButton;
     private Button mEditButton;
     private Button mDeleteButton;
-    private CheckBox mCheckBox;
+    private CheckBox mCheckBoxToDo;
+    private CheckBox mCheckBoxDone;
+    private CheckBox mCheckBoxDoing;
     private String date;
     private String time;
     private ToDo mToDo;
@@ -68,7 +71,7 @@ public class ChangeDialogFragment extends DiaLogFragment {
     private int indexOfFragments;
 
     public static ChangeDialogFragment newInstance(String titleFromFragments, String discriptionFromFragments
-            , String date,String time, String userOfUser, UUID idOfTasks, int indexOfFragments) {
+            , String date, String time, String userOfUser, UUID idOfTasks, int indexOfFragments) {
 
         Bundle args = new Bundle();
         args.putString(TITLE_FROM_FRAGMENTS, titleFromFragments);
@@ -99,18 +102,33 @@ public class ChangeDialogFragment extends DiaLogFragment {
     public void onResume() {
         super.onResume();
         UUID idOfTasks = (UUID) getArguments().getSerializable(ID_OF_TASKS);
-        date=getArguments().getString(DATE);
-        time=getArguments().getString(TIME);
+        date = getArguments().getString(DATE);
+        time = getArguments().getString(TIME);
         indexOfFragments = getArguments().getInt(INDEX_OF_FRAGMENTS);
         if (indexOfFragments == 1) {
             mToDo = ToDoListsRepository.getInstance().getToDo(idOfTasks);
-        }else if(indexOfFragments==2)
-        {
-            mDone= DoneListsRepository.getInstance().getDone(idOfTasks);
-        }
-        else
-        {
-            mDoing= DoingListsRepository.getInstance().getDoing(idOfTasks);
+            mCheckBoxToDo.setChecked(mToDo.isToDo());
+            mCheckBoxDoing.setChecked(mToDo.isDoing());
+            mCheckBoxDone.setChecked(mToDo.isDone());
+            mCheckBoxToDo.setEnabled(false);
+            mCheckBoxDoing.setEnabled(false);
+            mCheckBoxDone.setEnabled(false);
+        } else if (indexOfFragments == 2) {
+            mDone = DoneListsRepository.getInstance().getDone(idOfTasks);
+            mCheckBoxToDo.setChecked(mDone.isToDo());
+            mCheckBoxDoing.setChecked(mDone.isDoing());
+            mCheckBoxDone.setChecked(mDone.isDone());
+            mCheckBoxToDo.setEnabled(false);
+            mCheckBoxDoing.setEnabled(false);
+            mCheckBoxDone.setEnabled(false);
+        } else {
+            mDoing = DoingListsRepository.getInstance().getDoing(idOfTasks);
+            mCheckBoxToDo.setChecked(mDoing.isToDo());
+            mCheckBoxDoing.setChecked(mDoing.isDoing());
+            mCheckBoxDone.setChecked(mDoing.isDone());
+            mCheckBoxToDo.setEnabled(false);
+            mCheckBoxDoing.setEnabled(false);
+            mCheckBoxDone.setEnabled(false);
         }
         mTimeButton.setText(time);
         mDateButton.setText(date);
@@ -141,12 +159,9 @@ public class ChangeDialogFragment extends DiaLogFragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (indexOfFragments == 1) {
                     mToDo.setTitle(charSequence.toString());
-                }else if(indexOfFragments==2)
-                {
+                } else if (indexOfFragments == 2) {
                     mDone.setTitle(charSequence.toString());
-                }
-                else
-                {
+                } else {
                     mDoing.setTitle(charSequence.toString());
                 }
             }
@@ -166,12 +181,9 @@ public class ChangeDialogFragment extends DiaLogFragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (indexOfFragments == 1) {
                     mToDo.setDiscriptin(charSequence.toString());
-                }else if(indexOfFragments==2)
-                {
+                } else if (indexOfFragments == 2) {
                     mDone.setDiscriptin(charSequence.toString());
-                }
-                else
-                {
+                } else {
                     mDoing.setDiscriptin(charSequence.toString());
                 }
             }
@@ -188,6 +200,9 @@ public class ChangeDialogFragment extends DiaLogFragment {
                 mTtitleEditText.setEnabled(true);
                 mDiscriptionEditText.setEnabled(true);
                 mTimeButton.setEnabled(true);
+                mCheckBoxToDo.setEnabled(true);
+                mCheckBoxDoing.setEnabled(true);
+                mCheckBoxDone.setEnabled(true);
             }
         });
         mSaveButton.setOnClickListener(new View.OnClickListener() {
@@ -196,8 +211,8 @@ public class ChangeDialogFragment extends DiaLogFragment {
                 String titleEditText = mTtitleEditText.getText().toString();
                 String discriptionEditText = mDiscriptionEditText.getText().toString();
                 if (titleEditText.equals("") || discriptionEditText.equals("")) {
-                        Toast.makeText(getActivity(), "You Must Complete Eeach Field!", Toast.LENGTH_LONG).show();
-                }else {
+                    Toast.makeText(getActivity(), "You Must Complete Eeach Field!", Toast.LENGTH_LONG).show();
+                } else {
                     setObjectsOfFragments();
                     sendResult();
                 }
@@ -218,12 +233,9 @@ public class ChangeDialogFragment extends DiaLogFragment {
             public void onClick(View view) {
                 if (indexOfFragments == 1) {
                     deleteReposiory(1);
-                }else if(indexOfFragments==2)
-                {
+                } else if (indexOfFragments == 2) {
                     deleteReposiory(2);
-                }
-                else
-                {
+                } else {
                     deleteReposiory(3);
                 }
                 sendResult();
@@ -238,6 +250,111 @@ public class ChangeDialogFragment extends DiaLogFragment {
                 timePicker.show(getFragmentManager(), TIME_PICKER_TAG);
             }
         });
+        mCheckBoxDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (indexOfFragments == 1) {
+                    mToDo.setDone(isChecked);
+                    if (mCheckBoxToDo.isChecked()){
+                        mCheckBoxToDo.setChecked(false);
+
+                    }else if(mCheckBoxDoing.isChecked())
+                    {
+                        mCheckBoxDoing.setChecked(false);
+                    }
+                    mCheckBoxDone.setChecked(isChecked);
+                } else if (indexOfFragments == 2) {
+                    mDone.setDone(isChecked);
+                    if (mCheckBoxToDo.isChecked()){
+                        mCheckBoxToDo.setChecked(false);
+
+                    }else if(mCheckBoxDoing.isChecked())
+                    {
+                        mCheckBoxDoing.setChecked(false);
+                    }
+                    mCheckBoxDone.setChecked(isChecked);
+                } else {
+                    mDoing.setDone(isChecked);
+                    if (mCheckBoxToDo.isChecked()){
+                        mCheckBoxToDo.setChecked(false);
+
+                    }else if(mCheckBoxDoing.isChecked())
+                    {
+                        mCheckBoxDoing.setChecked(false);
+                    }
+                    mCheckBoxDone.setChecked(isChecked);
+                }
+            }
+        });
+        mCheckBoxDoing.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (indexOfFragments == 1) {
+                    mToDo.setDoing(isChecked);
+                    if (mCheckBoxDone.isChecked()) {
+                        mCheckBoxDone.setChecked(false);
+                    }else if(mCheckBoxToDo.isChecked())
+                    {
+                        mCheckBoxToDo.setChecked(false);
+                    }
+                   mCheckBoxDoing.setChecked(isChecked);
+                } else if (indexOfFragments == 2) {
+                    mDone.setDoing(isChecked);
+                    if (mCheckBoxDone.isChecked()) {
+                        mCheckBoxDone.setChecked(false);
+                    }else if(mCheckBoxToDo.isChecked())
+                    {
+                        mCheckBoxToDo.setChecked(false);
+                    }
+                    mCheckBoxDoing.setChecked(isChecked);
+                } else {
+                    mDoing.setDone(isChecked);
+                    if (mCheckBoxDone.isChecked()) {
+                        mCheckBoxDone.setChecked(false);
+                    }else if(mCheckBoxToDo.isChecked())
+                    {
+                        mCheckBoxToDo.setChecked(false);
+                    }
+                    mCheckBoxDoing.setChecked(isChecked);
+                }
+            }
+        });
+        mCheckBoxToDo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (indexOfFragments == 1) {
+                    mToDo.setToDo(isChecked);
+                    if (mCheckBoxDone.isChecked()) {
+                        mCheckBoxDone.setChecked(false);
+
+                    }else if(mCheckBoxDoing.isChecked())
+                    {
+                        mCheckBoxDoing.setChecked(false);
+                    }
+                    mCheckBoxToDo.setChecked(isChecked);
+                } else if (indexOfFragments == 2) {
+                    mDone.setToDo(isChecked);
+                    if (mCheckBoxDone.isChecked()) {
+                        mCheckBoxDone.setChecked(false);
+
+                    }else if(mCheckBoxDoing.isChecked())
+                    {
+                        mCheckBoxDoing.setChecked(false);
+                    }
+                    mCheckBoxToDo.setChecked(isChecked);
+                } else {
+                    mDoing.setToDo(isChecked);
+                    if (mCheckBoxDone.isChecked()) {
+                        mCheckBoxDone.setChecked(false);
+
+                    }else if(mCheckBoxDoing.isChecked())
+                    {
+                        mCheckBoxDoing.setChecked(false);
+                    }
+                    mCheckBoxToDo.setChecked(isChecked);
+                }
+            }
+        });
         return alertDialog;
     }
 
@@ -246,14 +363,11 @@ public class ChangeDialogFragment extends DiaLogFragment {
             mToDo.setTime(time);
             mToDo.setDate(date);
             updateReposiory(1);
-        }else if(indexOfFragments==2)
-        {
+        } else if (indexOfFragments == 2) {
             mDone.setTime(time);
             mDone.setDate(date);
             updateReposiory(2);
-        }
-        else
-        {
+        } else {
             mDoing.setTime(time);
             mDoing.setDate(date);
             updateReposiory(3);
@@ -268,7 +382,9 @@ public class ChangeDialogFragment extends DiaLogFragment {
         mSaveButton = view.findViewById(R.id.change_dialog_button_save);
         mEditButton = view.findViewById(R.id.change_dialog_button_edit);
         mDeleteButton = view.findViewById(R.id.change_dialog_button_delete);
-        mCheckBox = view.findViewById(R.id.change_dialog_checkbox);
+        mCheckBoxToDo = view.findViewById(R.id.change_dialog_checkbox_todo);
+        mCheckBoxDoing = view.findViewById(R.id.change_dialog_checkbox_doing);
+        mCheckBoxDone = view.findViewById(R.id.change_dialog_checkbox_done);
     }
 
     private void sendResult() {
@@ -283,15 +399,12 @@ public class ChangeDialogFragment extends DiaLogFragment {
                 ToDoListsRepository.getInstance().deleteToDo(mToDo);
             } catch (Exception e) {
             }
-        }else if(indexOfFragments==2)
-        {
+        } else if (indexOfFragments == 2) {
             try {
                 DoneListsRepository.getInstance().deleteDone(mDone);
             } catch (Exception e) {
             }
-        }
-        else
-        {
+        } else {
             try {
                 DoingListsRepository.getInstance().deleteDoing(mDoing);
             } catch (Exception e) {
@@ -305,15 +418,12 @@ public class ChangeDialogFragment extends DiaLogFragment {
                 ToDoListsRepository.getInstance().updateToDo(mToDo);
             } catch (Exception e) {
             }
-        }else if(indexOfFragments==2)
-        {
+        } else if (indexOfFragments == 2) {
             try {
                 DoneListsRepository.getInstance().updateDone(mDone);
             } catch (Exception e) {
             }
-        }
-        else
-        {
+        } else {
             try {
                 DoingListsRepository.getInstance().updateDoing(mDoing);
             } catch (Exception e) {
@@ -329,14 +439,14 @@ public class ChangeDialogFragment extends DiaLogFragment {
             date = data.getStringExtra(DatePickerFragment.newInstance().getEXTRA_TASK_DATE());
             mDateButton.setText(date);
         }
-            if (requestCode == REQUEST_FOR_TIMEPICKER) {
-                time = data.getStringExtra(TimePicherFragment.newInstance().getEXTRA_TASK_TIME());
-                mTimeButton.setText(time);
-
-            }
+        if (requestCode == REQUEST_FOR_TIMEPICKER) {
+            time = data.getStringExtra(TimePicherFragment.newInstance().getEXTRA_TASK_TIME());
+            mTimeButton.setText(time);
 
         }
+
     }
+}
 
 
 

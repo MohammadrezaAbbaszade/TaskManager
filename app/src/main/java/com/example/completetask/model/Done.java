@@ -12,6 +12,24 @@ public class Done {
     private String mDate;
     private String mTime;
     private boolean mIsDone;
+    private boolean mIsToDo;
+    private boolean mIsDoing;
+
+    public boolean isToDo() {
+        return mIsToDo;
+    }
+
+    public void setToDo(boolean toDo) {
+        mIsToDo = toDo;
+    }
+
+    public boolean isDoing() {
+        return mIsDoing;
+    }
+
+    public void setDoing(boolean doing) {
+        mIsDoing = doing;
+    }
 
     public Done() {
         mUUID = UUID.randomUUID();

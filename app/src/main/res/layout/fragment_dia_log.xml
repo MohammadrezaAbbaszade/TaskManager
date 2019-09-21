@@ -37,12 +37,30 @@
             android:id="@+id/dialog_time"
         android:text="@string/setTime"
         android:layout_gravity="center"/>
-    <CheckBox
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/dialog_checkbox"
-        android:text="@string/done"
-        />
+        android:orientation="horizontal">
+        <CheckBox
+            android:id="@+id/dialog_checkbox_done"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/done" />
+        <CheckBox
+            android:id="@+id/dialog_checkbox_doing"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/doing" />
+        <CheckBox
+            android:id="@+id/dialog_checkbox_todo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/todo" />
+
+    </LinearLayout>
 
 </LinearLayout>
 
