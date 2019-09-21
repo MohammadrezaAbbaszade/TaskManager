@@ -207,12 +207,12 @@ public class TodoListFragment extends Fragment {
             mToDo.setDone(taskState[1]);
             mToDo.setToDo(taskState[2]);
         }
-        ToDoListsRepository.getInstance().insertToDo(mToDo);
+        ToDoListsRepository.getInstance(getContext()).insertToDo(mToDo);
         creatRecycler();
     }
 
     private void creatRecycler() {
-        mToDoList = ToDoListsRepository.getInstance().getToDoes(userNameOfUser);
+        mToDoList = ToDoListsRepository.getInstance(getContext()).getToDoes(userNameOfUser);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         toDoAdaptor = new ToDoAdaptor(mToDoList);
         mRecyclerView.setAdapter(toDoAdaptor);

@@ -32,8 +32,11 @@ public class ToDo {
     }
 
     public ToDo() {
-        id = UUID.randomUUID();
+        this(UUID.randomUUID());
+    }
 
+    public ToDo(UUID uuid) {
+       id = uuid;
     }
 
     public UUID getId() {
