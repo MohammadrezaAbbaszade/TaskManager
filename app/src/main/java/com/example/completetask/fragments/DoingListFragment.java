@@ -182,12 +182,12 @@ public class DoingListFragment extends Fragment {
             mDoing.setDate(dateFromDialogFragment);
             mDoing.setTime(timeFromDialogFragment);
         }
-        DoingListsRepository.getInstance().insertDoing(mDoing);
+        DoingListsRepository.getInstance(getContext()).insertDoing(mDoing);
         creatRecycler();
     }
 
     private void creatRecycler() {
-        mDoingList = DoingListsRepository.getInstance().getDoings(userNameOfUser);
+        mDoingList = DoingListsRepository.getInstance(getContext()).getDoings(userNameOfUser);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
          doingAdaptor= new DoingAdaptor(mDoingList);
         mRecyclerView.setAdapter(doingAdaptor);

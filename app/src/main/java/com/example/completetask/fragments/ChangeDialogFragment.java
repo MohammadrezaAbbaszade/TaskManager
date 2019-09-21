@@ -106,7 +106,7 @@ public class ChangeDialogFragment extends DiaLogFragment {
         time = getArguments().getString(TIME);
         indexOfFragments = getArguments().getInt(INDEX_OF_FRAGMENTS);
         if (indexOfFragments == 1) {
-            mToDo = ToDoListsRepository.getInstance().getToDo(idOfTasks);
+            mToDo = ToDoListsRepository.getInstance(getContext()).getToDo(idOfTasks);
             mCheckBoxToDo.setChecked(mToDo.isToDo());
             mCheckBoxDoing.setChecked(mToDo.isDoing());
             mCheckBoxDone.setChecked(mToDo.isDone());
@@ -122,7 +122,7 @@ public class ChangeDialogFragment extends DiaLogFragment {
             mCheckBoxDoing.setEnabled(false);
             mCheckBoxDone.setEnabled(false);
         } else {
-            mDoing = DoingListsRepository.getInstance().getDoing(idOfTasks);
+            mDoing = DoingListsRepository.getInstance(getContext()).getDoing(idOfTasks);
             mCheckBoxToDo.setChecked(mDoing.isToDo());
             mCheckBoxDoing.setChecked(mDoing.isDoing());
             mCheckBoxDone.setChecked(mDoing.isDone());
@@ -143,58 +143,6 @@ public class ChangeDialogFragment extends DiaLogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        if (savedInstanceState!=null)
-        {
-            UUID idOfTasks = (UUID) getArguments().getSerializable(ID_OF_TASKS);
-            date = getArguments().getString(DATE);
-            time = getArguments().getString(TIME);
-            if (indexOfFragments == 1) {
-               mTtitleEditText.setText(ToDoListsRepository.getInstance().getToDo(idOfTasks)
-               .getTitle());
-               mDiscriptionEditText.setText(ToDoListsRepository.getInstance().getToDo(idOfTasks)
-                       .getDiscriptin());
-               mDateButton.setText(ToDoListsRepository.getInstance().getToDo(idOfTasks)
-                       .getDate());
-               mTimeButton.setText(ToDoListsRepository.getInstance().getToDo(idOfTasks)
-                       .getTime());
-               mCheckBoxDone.setChecked(ToDoListsRepository.getInstance().getToDo(idOfTasks)
-                      .isDone());
-                mCheckBoxDoing.setChecked(ToDoListsRepository.getInstance().getToDo(idOfTasks)
-                        .isDoing());
-               mCheckBoxToDo.setChecked(ToDoListsRepository.getInstance().getToDo(idOfTasks)
-                        .isToDo());
-            } else if (indexOfFragments == 2) {
-                mTtitleEditText.setText(DoneListsRepository.getInstance().getDone(idOfTasks)
-                        .getTitle());
-                mDiscriptionEditText.setText(DoneListsRepository.getInstance().getDone(idOfTasks)
-                        .getDiscriptin());
-                mDateButton.setText(DoneListsRepository.getInstance().getDone(idOfTasks)
-                        .getDate());
-                mTimeButton.setText(DoneListsRepository.getInstance().getDone(idOfTasks)
-                        .getTime());
-                mCheckBoxDone.setChecked(DoneListsRepository.getInstance().getDone(idOfTasks)
-                        .isDone());
-                mCheckBoxDoing.setChecked(DoneListsRepository.getInstance().getDone(idOfTasks)
-                        .isDoing());
-                mCheckBoxToDo.setChecked(DoneListsRepository.getInstance().getDone(idOfTasks)
-                        .isToDo());
-            } else {
-                mTtitleEditText.setText(DoingListsRepository.getInstance().getDoing(idOfTasks)
-                        .getTitle());
-                mDiscriptionEditText.setText(DoingListsRepository.getInstance().getDoing(idOfTasks)
-                        .getDiscriptin());
-                mDateButton.setText(DoingListsRepository.getInstance().getDoing(idOfTasks)
-                        .getDate());
-                mTimeButton.setText(DoingListsRepository.getInstance().getDoing(idOfTasks)
-                        .getTime());
-                mCheckBoxDone.setChecked(DoingListsRepository.getInstance().getDoing(idOfTasks)
-                        .isDone());
-                mCheckBoxDoing.setChecked(DoingListsRepository.getInstance().getDoing(idOfTasks)
-                        .isDoing());
-                mCheckBoxToDo.setChecked(DoingListsRepository.getInstance().getDoing(idOfTasks)
-                        .isToDo());
-            }
-        }
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_change_dialog, null, false);
         init(view);
         final AlertDialog alertDialog;
@@ -448,7 +396,7 @@ public class ChangeDialogFragment extends DiaLogFragment {
     private void deleteReposiory(int indexOfFragments) {
         if (indexOfFragments == 1) {
             try {
-                ToDoListsRepository.getInstance().deleteToDo(mToDo);
+                ToDoListsRepository.getInstance(getContext()).deleteToDo(mToDo);
             } catch (Exception e) {
             }
         } else if (indexOfFragments == 2) {
@@ -458,7 +406,7 @@ public class ChangeDialogFragment extends DiaLogFragment {
             }
         } else {
             try {
-                DoingListsRepository.getInstance().deleteDoing(mDoing);
+                DoingListsRepository.getInstance(getContext()).deleteDoing(mDoing);
             } catch (Exception e) {
             }
         }
@@ -467,7 +415,7 @@ public class ChangeDialogFragment extends DiaLogFragment {
     private void updateReposiory(int indexOfFragments) {
         if (indexOfFragments == 1) {
             try {
-                ToDoListsRepository.getInstance().updateToDo(mToDo);
+                ToDoListsRepository.getInstance(getContext()).updateToDo(mToDo);
             } catch (Exception e) {
             }
         } else if (indexOfFragments == 2) {
@@ -477,7 +425,7 @@ public class ChangeDialogFragment extends DiaLogFragment {
             }
         } else {
             try {
-                DoingListsRepository.getInstance().updateDoing(mDoing);
+                DoingListsRepository.getInstance(getContext()).updateDoing(mDoing);
             } catch (Exception e) {
             }
         }
