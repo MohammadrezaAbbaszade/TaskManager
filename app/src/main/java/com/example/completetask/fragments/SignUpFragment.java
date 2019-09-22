@@ -69,11 +69,11 @@ public class SignUpFragment extends Fragment {
                 user.setmPassword(password);
                 if (username.equals("") || password.equals("")) {
                     Toast.makeText(getActivity(), "Empty username or password", Toast.LENGTH_SHORT).show();
-                } else if (UserRepository.getInstance().checkUserName(username)) {
+                } else if (UserRepository.getInstance(getContext()).checkUserName(username)) {
                     Toast.makeText(getActivity(), "This UserName is Exist", Toast.LENGTH_SHORT).show();
                 } else {
                     try {
-                        UserRepository.getInstance().addUser(user);
+                        UserRepository.getInstance(getContext()).addUser(user);
                         answer = false;
                     } catch (IllegalArgumentException e) {
                         e.getMessage();

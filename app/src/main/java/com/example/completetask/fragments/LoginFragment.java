@@ -85,7 +85,7 @@ public class LoginFragment extends Fragment {
             public void onClick(View view) {
                 String usrname = mUserNameEditText.getText().toString();
                 String password = mPasswordEditText.getText().toString();
-                if (UserRepository.getInstance().login(usrname, password)) {
+                if (UserRepository.getInstance(getContext()).login(usrname, password)) {
                     Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     Intent intent = FragmentsMainActivity.newIntent(getActivity(),usrname);
                     intent.putExtra(LOGIN_VALUE, usrname);

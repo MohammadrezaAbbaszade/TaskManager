@@ -153,7 +153,7 @@ public class DoneListFragment extends Fragment {
     }
 
     private void creatRecycler() {
-        mDoneList = DoneListsRepository.getInstance().getDones(userNameOfUser);
+        mDoneList = DoneListsRepository.getInstance(getContext()).getDones(userNameOfUser);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         doneAdaptor = new DoneAdaptor(mDoneList);
         mRecyclerView.setAdapter(doneAdaptor);
@@ -189,7 +189,7 @@ public class DoneListFragment extends Fragment {
             mDone.setDate(dateFromDialogFragment);
             mDone.setTime(timeFromDialogFragment);
         }
-        DoneListsRepository.getInstance().insertDone(mDone);
+        DoneListsRepository.getInstance(getContext()).insertDone(mDone);
         creatRecycler();
     }
 }

@@ -15,9 +15,12 @@ public class User {
         mUUID = UUID;
     }
 
-    public User()
-    {
-        mUUID=UUID.randomUUID();
+    public User() {
+        this(UUID.randomUUID());
+    }
+
+    public User(UUID uuid) {
+        mUUID = uuid;
     }
     public String getmUserName() {
         return mUserName;

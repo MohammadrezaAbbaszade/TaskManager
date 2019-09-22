@@ -114,7 +114,7 @@ public class ChangeDialogFragment extends DiaLogFragment {
             mCheckBoxDoing.setEnabled(false);
             mCheckBoxDone.setEnabled(false);
         } else if (indexOfFragments == 2) {
-            mDone = DoneListsRepository.getInstance().getDone(idOfTasks);
+            mDone = DoneListsRepository.getInstance(getContext()).getDone(idOfTasks);
             mCheckBoxToDo.setChecked(mDone.isToDo());
             mCheckBoxDoing.setChecked(mDone.isDoing());
             mCheckBoxDone.setChecked(mDone.isDone());
@@ -401,7 +401,7 @@ public class ChangeDialogFragment extends DiaLogFragment {
             }
         } else if (indexOfFragments == 2) {
             try {
-                DoneListsRepository.getInstance().deleteDone(mDone);
+                DoneListsRepository.getInstance(getContext()).deleteDone(mDone);
             } catch (Exception e) {
             }
         } else {
@@ -420,7 +420,7 @@ public class ChangeDialogFragment extends DiaLogFragment {
             }
         } else if (indexOfFragments == 2) {
             try {
-                DoneListsRepository.getInstance().updateDone(mDone);
+                DoneListsRepository.getInstance(getContext()).updateDone(mDone);
             } catch (Exception e) {
             }
         } else {
