@@ -144,7 +144,16 @@ public class DoingListsRepository {
         String[] whereArgs = new String[]{doing.getUUID().toString()};
         mDatabase.delete(TaskDBSchema.Doing.NAME, where, whereArgs);
     }
-
+    public void deleteDoings(List<Doing> doings) throws Exception {
+        for (Doing d : doings) {
+            Doing d2 = getDoing(d.getUUID());
+            if (d2 == null)
+                throw new Exception("You Dont Have Any Tasks  To Delete!!!");
+            String where = TaskDBSchema.Doing.Cols.UUID + " = ?";
+            String[] whereArgs = new String[]{d.getUUID().toString()};
+            mDatabase.delete(TaskDBSchema.Doing.NAME, where, whereArgs);
+        }
+    }
     private ContentValues getContentValues(Doing doing) {
         ContentValues values = new ContentValues();
         values.put(TaskDBSchema.Doing.Cols.UUID, doing.getUUID().toString());

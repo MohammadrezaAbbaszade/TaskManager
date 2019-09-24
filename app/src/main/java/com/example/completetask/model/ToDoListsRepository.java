@@ -143,7 +143,17 @@ public class ToDoListsRepository {
         String[] whereArgs = new String[]{toDo.getId().toString()};
         mDatabase.delete(TaskDBSchema.ToDo.NAME, where, whereArgs);
     }
+    public void deleteToDoes(List<ToDo> toDos) throws Exception {
+       for(ToDo t:toDos) {
+           ToDo t2=getToDo(t.getId());
+           if (t2 == null)
+               throw new Exception("You Dont Have Any Tasks  To Delete!!!");
+           String where = TaskDBSchema.ToDo.Cols.UUID + " = ?";
+           String[] whereArgs = new String[]{t.getId().toString()};
+           mDatabase.delete(TaskDBSchema.ToDo.NAME, where, whereArgs);
+       }
 
+    }
     private ContentValues getContentValues(ToDo toDo) {
         ContentValues values = new ContentValues();
         values.put(TaskDBSchema.ToDo.Cols.UUID, toDo.getId().toString());

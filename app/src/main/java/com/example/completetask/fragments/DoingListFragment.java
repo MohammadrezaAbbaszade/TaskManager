@@ -2,17 +2,23 @@ package com.example.completetask.fragments;
 
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -62,6 +68,26 @@ public class DoingListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userNameOfUser = getArguments().getString(USERNAME_OF_USER);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu, menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_menu:
+                ShowMsgDialog(getActivity());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
 
     @Override
@@ -204,5 +230,27 @@ public class DoingListFragment extends Fragment {
         doingAdaptor = new DoingAdaptor(mDoingList);
         mRecyclerView.setAdapter(doingAdaptor);
     }
-
+    public void ShowMsgDialog(Context self) {
+        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(self);
+        dlgAlert.setMessage("Are you Sure?");
+        dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                try {
+                    List<Doing> mDoingList = DoingListsRepository.getInstance(getContext()).getDoings(userNameOfUser);
+                    DoingListsRepository.getInstance(getContext()).deleteDoings(mDoingList);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                creatRecycler();
+            }
+        });
+        dlgAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                dialog.dismiss();
+            }
+        });
+        dlgAlert.show();
+    }
 }
