@@ -10,6 +10,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -56,6 +57,7 @@ public class TodoListFragment extends Fragment {
     private int currentPosition;
     private String userNameOfUser;
     private ToDoAdaptor toDoAdaptor;
+    private CardView mCardView;
 
     public static TodoListFragment newInstance(String userNameOfUser) {
 
@@ -68,14 +70,6 @@ public class TodoListFragment extends Fragment {
 
     public TodoListFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (toDoAdaptor == null) {
-            mEmptyText.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
@@ -242,6 +236,11 @@ public class TodoListFragment extends Fragment {
 
     private void creatRecycler() {
         mToDoList = ToDoListsRepository.getInstance(getContext()).getToDoes(userNameOfUser);
+        if (mToDoList.size() == 0) {
+            mEmptyText.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyText.setVisibility(View.GONE);
+        }
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         toDoAdaptor = new ToDoAdaptor(mToDoList);
         mRecyclerView.setAdapter(toDoAdaptor);
@@ -258,7 +257,7 @@ public class TodoListFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-              creatRecycler();
+                creatRecycler();
             }
         });
         dlgAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

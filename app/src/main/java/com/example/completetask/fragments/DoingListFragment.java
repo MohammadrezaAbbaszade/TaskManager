@@ -50,7 +50,7 @@ public class DoingListFragment extends Fragment {
     String userNameOfUser;
     private RecyclerView mRecyclerView;
     private DoingAdaptor doingAdaptor;
-
+    private TextView mEmptyText;
     public static DoingListFragment newInstance(String userNameOfUser) {
 
         Bundle args = new Bundle();
@@ -111,7 +111,7 @@ public class DoingListFragment extends Fragment {
     private void init(View view) {
         mFloatingActionButton = view.findViewById(R.id.doing_fab);
         mRecyclerView = view.findViewById(R.id.doing_recycler);
-
+        mEmptyText = view.findViewById(R.id.empty_indoingfragment);
 
     }
 
@@ -226,6 +226,11 @@ public class DoingListFragment extends Fragment {
 
     private void creatRecycler() {
         mDoingList = DoingListsRepository.getInstance(getContext()).getDoings(userNameOfUser);
+        if (mDoingList.size() == 0) {
+            mEmptyText.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyText.setVisibility(View.GONE);
+        }
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         doingAdaptor = new DoingAdaptor(mDoingList);
         mRecyclerView.setAdapter(doingAdaptor);

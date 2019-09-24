@@ -52,7 +52,7 @@ public class DoneListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     String userNameOfUser;
     private DoneAdaptor doneAdaptor;
-
+    private TextView mEmptyText;
     public static DoneListFragment newInstance(String usernameOfUser) {
 
         Bundle args = new Bundle();
@@ -176,10 +176,16 @@ public class DoneListFragment extends Fragment {
     private void init(View view) {
         mFloatingActionButton = view.findViewById(R.id.done_fab);
         mRecyclerView = view.findViewById(R.id.done_recycler);
+        mEmptyText = view.findViewById(R.id.empty_indonefragment);
     }
 
     private void creatRecycler() {
         mDoneList = DoneListsRepository.getInstance(getContext()).getDones(userNameOfUser);
+        if (mDoneList.size() == 0) {
+            mEmptyText.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyText.setVisibility(View.GONE);
+        }
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         doneAdaptor = new DoneAdaptor(mDoneList);
         mRecyclerView.setAdapter(doneAdaptor);
