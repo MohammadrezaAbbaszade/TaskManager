@@ -1,47 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#A898C5"
+    android:orientation="vertical"
+    android:gravity="center"
     tools:context=".fragments.SignUpFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|top"
-        android:layout_marginTop="130dp"
-        android:orientation="vertical">
+        android:hint="UserName">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/login_usernamee"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="@string/UserName_PlainText" />
+            android:drawableLeft="@drawable/ic_username" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/editText_loginpasswordd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPassword" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_marginBottom="100dp"
-        android:orientation="vertical">
+        android:hint="Password">
 
-        <Button
-            android:id="@+id/button_signUp"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editText_loginpasswordd"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/SignUp_Button" />
-    </LinearLayout>
+            android:drawableLeft="@drawable/ic_password" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-</FrameLayout>
+    <Button
+        android:id="@+id/button_signUp"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:background="@drawable/shape2"
+        android:text="SignUp"
+        android:layout_marginTop="50dp"
+        android:textColor="#FFFFFF"
+        />
+</LinearLayout>

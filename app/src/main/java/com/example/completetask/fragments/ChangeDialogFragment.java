@@ -308,7 +308,7 @@ public class ChangeDialogFragment extends DiaLogFragment {
                     }
                     mCheckBoxDoing.setChecked(isChecked);
                 } else {
-                    mDoing.setDone(isChecked);
+                    mDoing.setDoing(isChecked);
                     if (mCheckBoxDone.isChecked()) {
                         mCheckBoxDone.setChecked(false);
                     }else if(mCheckBoxToDo.isChecked())

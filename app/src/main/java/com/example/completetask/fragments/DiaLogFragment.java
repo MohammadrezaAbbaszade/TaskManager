@@ -100,6 +100,8 @@ public class DiaLogFragment extends DialogFragment {
                 } else if (mCheckBoxDoing.isChecked()) {
                     mCheckBoxDoing.setChecked(false);
                     mCheckBoxDone.setChecked(isChecked);
+                }else {
+                    mCheckBoxDone.setChecked(isChecked);
                 }
             }
         });
@@ -112,6 +114,8 @@ public class DiaLogFragment extends DialogFragment {
                     }else if(mCheckBoxToDo.isChecked())
                     {
                         mCheckBoxToDo.setChecked(false);
+                        mCheckBoxDoing.setChecked(isChecked);
+                    }else {
                         mCheckBoxDoing.setChecked(isChecked);
                     }
             }
@@ -126,6 +130,8 @@ public class DiaLogFragment extends DialogFragment {
 
                     }else if(mCheckBoxDoing.isChecked()) {
                         mCheckBoxDoing.setChecked(false);
+                        mCheckBoxToDo.setChecked(isChecked);
+                    }else {
                         mCheckBoxToDo.setChecked(isChecked);
                     }
             }

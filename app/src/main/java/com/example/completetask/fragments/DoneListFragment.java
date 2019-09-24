@@ -164,6 +164,7 @@ public class DoneListFragment extends Fragment {
         String[] valueFromDiaLogFragment;
         String dateFromDialogFragment;
         String timeFromDialogFragment;
+        boolean[] taskState;
         if (resultCode != Activity.RESULT_OK || data == null)
             return;
 
@@ -171,13 +172,14 @@ public class DoneListFragment extends Fragment {
             valueFromDiaLogFragment = data.getStringArrayExtra(DiaLogFragment.getTitleAndDiscription());
             dateFromDialogFragment =  data.getStringExtra(DiaLogFragment.getDateFromDatepicker());
             timeFromDialogFragment=data.getStringExtra(DiaLogFragment.newInstance().getTIME_FROM_TIMEPICKER());
-            setToDoClass(valueFromDiaLogFragment, dateFromDialogFragment,timeFromDialogFragment);
+            taskState = data.getBooleanArrayExtra(DiaLogFragment.newInstance().getCHECKBOXES_STATE());
+            setToDoClass(valueFromDiaLogFragment,taskState, dateFromDialogFragment,timeFromDialogFragment);
         }
         if (requestCode == REQUEST_CODE_FOR_CHANGE_FRAGMENT) {
             creatRecycler();
         }
     }
-    private void setToDoClass(String[] valueFromDiaLogFragment, String dateFromDialogFragment
+    private void setToDoClass(String[] valueFromDiaLogFragment, boolean[] taskState, String dateFromDialogFragment
             ,String timeFromDialogFragment) {
        mDone = new Done();
         if (valueFromDiaLogFragment != null) {
@@ -188,6 +190,11 @@ public class DoneListFragment extends Fragment {
         if (dateFromDialogFragment != null&&timeFromDialogFragment!=null) {
             mDone.setDate(dateFromDialogFragment);
             mDone.setTime(timeFromDialogFragment);
+        }
+        if (taskState != null) {
+            mDone.setDoing(taskState[0]);
+            mDone.setDone(taskState[1]);
+            mDone.setToDo(taskState[2]);
         }
         DoneListsRepository.getInstance(getContext()).insertDone(mDone);
         creatRecycler();

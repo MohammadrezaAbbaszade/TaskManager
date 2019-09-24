@@ -44,14 +44,16 @@ public class DoingListFragment extends Fragment {
     String userNameOfUser;
     private RecyclerView mRecyclerView;
     private DoingAdaptor doingAdaptor;
+
     public static DoingListFragment newInstance(String userNameOfUser) {
 
         Bundle args = new Bundle();
-        args.putString(USERNAME_OF_USER,userNameOfUser);
+        args.putString(USERNAME_OF_USER, userNameOfUser);
         DoingListFragment fragment = new DoingListFragment();
         fragment.setArguments(args);
         return fragment;
     }
+
     public DoingListFragment() {
         // Required empty public constructor
     }
@@ -66,7 +68,7 @@ public class DoingListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       View view= inflater.inflate(R.layout.fragment_doing_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_doing_list, container, false);
         init(view);
         creatRecycler();
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -79,12 +81,14 @@ public class DoingListFragment extends Fragment {
         });
         return view;
     }
+
     private void init(View view) {
         mFloatingActionButton = view.findViewById(R.id.doing_fab);
         mRecyclerView = view.findViewById(R.id.doing_recycler);
 
 
     }
+
     private class DoingHolder extends RecyclerView.ViewHolder {
         private TextView mItemTitleTextView;
         private TextView mItemDiscriptionTextView;
@@ -102,7 +106,7 @@ public class DoingListFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     ChangeDialogFragment changeDialogFragment = ChangeDialogFragment.newInstance(mDoing.getTitle()
-                            , mDoing.getDiscriptin(),mDoing.getDate(),mDoing.getTime(), userNameOfUser, mDoing.getUUID(), 3);
+                            , mDoing.getDiscriptin(), mDoing.getDate(), mDoing.getTime(), userNameOfUser, mDoing.getUUID(), 3);
                     changeDialogFragment.setTargetFragment(DoingListFragment.this, REQUEST_CODE_FOR_CHANGE_FRAGMENT);
                     changeDialogFragment.show(getFragmentManager(), CHANGE_DIALOG_FRAGMENT_TAG);
 
@@ -111,8 +115,8 @@ public class DoingListFragment extends Fragment {
         }
 
         public void bind(Doing doing) {
-            Character shapeText=doing.getTitle().charAt(0);
-            String stringForShapeText=shapeText.toString();
+            Character shapeText = doing.getTitle().charAt(0);
+            String stringForShapeText = shapeText.toString();
             mItemTitleTextView.setText(doing.getTitle());
             mItemDiscriptionTextView.setText(doing.getDiscriptin());
             mItemShapeTextView.setText(stringForShapeText);
@@ -123,6 +127,7 @@ public class DoingListFragment extends Fragment {
 
     private class DoingAdaptor extends RecyclerView.Adapter<DoingHolder> {
         private List<Doing> mDoingList;
+
         public DoingAdaptor(List<Doing> doingList) {
             mDoingList = doingList;
         }
@@ -132,7 +137,7 @@ public class DoingListFragment extends Fragment {
         @Override
         public DoingHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(getActivity()).inflate(R.layout.list_items, parent, false);
-            DoingHolder doingHolder=new DoingHolder(view);
+            DoingHolder doingHolder = new DoingHolder(view);
             return doingHolder;
         }
 
@@ -156,31 +161,38 @@ public class DoingListFragment extends Fragment {
         String[] valueFromDiaLogFragment;
         String dateFromDialogFragment;
         String timeFromDialogFragment;
+        boolean[] taskState;
         if (resultCode != Activity.RESULT_OK || data == null)
             return;
 
         if (requestCode == REQUEST_FOR_DIALOGFRAGMENT) {
             valueFromDiaLogFragment = data.getStringArrayExtra(DiaLogFragment.getTitleAndDiscription());
-            dateFromDialogFragment =  data.getStringExtra(DiaLogFragment.getDateFromDatepicker());
-            timeFromDialogFragment=data.getStringExtra(DiaLogFragment.newInstance().getTIME_FROM_TIMEPICKER());
-            setToDoClass(valueFromDiaLogFragment, dateFromDialogFragment,timeFromDialogFragment);
+            dateFromDialogFragment = data.getStringExtra(DiaLogFragment.getDateFromDatepicker());
+            timeFromDialogFragment = data.getStringExtra(DiaLogFragment.newInstance().getTIME_FROM_TIMEPICKER());
+            taskState = data.getBooleanArrayExtra(DiaLogFragment.newInstance().getCHECKBOXES_STATE());
+            setToDoClass(valueFromDiaLogFragment, taskState, dateFromDialogFragment, timeFromDialogFragment);
         }
         if (requestCode == REQUEST_CODE_FOR_CHANGE_FRAGMENT) {
             creatRecycler();
         }
     }
 
-    private void setToDoClass(String[] valueFromDiaLogFragment, String dateFromDialogFragment
-            ,String timeFromDialogFragment) {
-       mDoing = new Doing();
+    private void setToDoClass(String[] valueFromDiaLogFragment, boolean[] taskState, String dateFromDialogFragment
+            , String timeFromDialogFragment) {
+        mDoing = new Doing();
         if (valueFromDiaLogFragment != null) {
             mDoing.setTitle(valueFromDiaLogFragment[0]);
             mDoing.setDiscriptin(valueFromDiaLogFragment[1]);
             mDoing.setUserName(userNameOfUser);
         }
-        if (dateFromDialogFragment != null&&timeFromDialogFragment!=null) {
+        if (dateFromDialogFragment != null && timeFromDialogFragment != null) {
             mDoing.setDate(dateFromDialogFragment);
             mDoing.setTime(timeFromDialogFragment);
+        }
+        if (taskState != null) {
+            mDoing.setDoing(taskState[0]);
+            mDoing.setDone(taskState[1]);
+            mDoing.setToDo(taskState[2]);
         }
         DoingListsRepository.getInstance(getContext()).insertDoing(mDoing);
         creatRecycler();
@@ -189,7 +201,7 @@ public class DoingListFragment extends Fragment {
     private void creatRecycler() {
         mDoingList = DoingListsRepository.getInstance(getContext()).getDoings(userNameOfUser);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-         doingAdaptor= new DoingAdaptor(mDoingList);
+        doingAdaptor = new DoingAdaptor(mDoingList);
         mRecyclerView.setAdapter(doingAdaptor);
     }
 

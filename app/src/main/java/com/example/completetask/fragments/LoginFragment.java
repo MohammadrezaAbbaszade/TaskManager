@@ -12,12 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+import com.google.android.material.button.MaterialButton;
 
 import com.example.completetask.activities.FragmentsMainActivity;
 import com.example.completetask.R;
 import com.example.completetask.activities.SignUpActivity;
 import com.example.completetask.model.UserRepository;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.UUID;
 
@@ -33,6 +36,7 @@ public class LoginFragment extends Fragment {
     private String[] result;
     private Button mButtonLogin;
     private Button mButtonSignUp;
+    private TextView mButtonSignUpTextVview;
     private EditText mUserNameEditText;
     private EditText mPasswordEditText;
     String[] valueFromSignUpFragment;
@@ -70,7 +74,7 @@ public class LoginFragment extends Fragment {
             mPasswordEditText.setText(valueFromSignUpFragment[1]);
         }
 
-        mButtonSignUp.setOnClickListener(new View.OnClickListener() {
+       mButtonSignUpTextVview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String usrname = mUserNameEditText.getText().toString();
@@ -100,7 +104,7 @@ public class LoginFragment extends Fragment {
 
     private void init(View view) {
         mButtonLogin = view.findViewById(R.id.button_login);
-        mButtonSignUp = view.findViewById(R.id.button_signUp);
+       mButtonSignUpTextVview = view.findViewById(R.id.button_signUp);
         mUserNameEditText = view.findViewById(R.id.login_username);
         mPasswordEditText = view.findViewById(R.id.editText_loginpassword);
     }
