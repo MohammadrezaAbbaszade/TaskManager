@@ -16,26 +16,35 @@
 
         <EditText
             android:id="@+id/change_dialog_title"
-            android:layout_width="match_parent"
+            android:layout_width="350dp"
+            android:layout_gravity="center"
             android:layout_height="wrap_content"
-            android:hint="Title" />
+            android:hint="@string/title" />
 
         <EditText
             android:id="@+id/change_dialog_discription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="350dp"
+            android:layout_gravity="center"
+            android:layout_height="130dp"
+            android:layout_margin="8dp"
             android:hint="@string/discription" />
         <Button
             android:id="@+id/change_dialog_date"
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/setDate" />
+            android:background="@drawable/shape4"
+            android:layout_margin="8dp"
+            android:textColor="#FFFFFF"
+            android:text="@string/setDate"
+            android:layout_gravity="center" />
 
         <Button
             android:id="@+id/change_dialog_time"
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/shape4"
+            android:layout_margin="8dp"
+            android:textColor="#FFFFFF"
             android:layout_gravity="center"
             android:text="@string/setTime" />
 
@@ -46,6 +55,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
         <CheckBox
             android:id="@+id/change_dialog_checkbox_done"
@@ -72,25 +82,32 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center"
+    android:layout_marginTop="20dp"
     >
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:layout_margin="3dp"
+        android:background="@drawable/shape5"
         android:id="@+id/change_dialog_button_delete"
         android:text="@string/delete"
         />
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:background="@drawable/shape5"
         android:id="@+id/change_dialog_button_edit"
         android:layout_weight="1"
         android:text="@string/edit"
         />
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:layout_margin="3dp"
+        android:background="@drawable/shape5"
         android:id="@+id/change_dialog_button_save"
         android:text="@string/save"
         />
