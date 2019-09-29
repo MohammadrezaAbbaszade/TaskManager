@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,7 +80,7 @@ public class DatePickerFragment extends DiaLogFragment {
         int monthOfYear = mDatePicker.getMonth();
         int dayOfMonth = mDatePicker.getDayOfMonth();
         Date date=new Date(year,monthOfYear,dayOfMonth);
-        SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy"); ;
+        SimpleDateFormat formatter = new SimpleDateFormat("dd MM yyyy a" , Locale.US);
         String dateString =formatter.format(date);
         return dateString;
     }

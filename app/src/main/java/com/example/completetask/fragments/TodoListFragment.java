@@ -29,6 +29,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.completetask.R;
+import com.example.completetask.model.Doing;
+import com.example.completetask.model.DoingListsRepository;
+import com.example.completetask.model.Done;
+import com.example.completetask.model.DoneListsRepository;
 import com.example.completetask.model.ToDo;
 import com.example.completetask.model.ToDoListsRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -252,8 +256,12 @@ public class TodoListFragment extends Fragment {
         dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 try {
+                    List<Doing> mDoingList = DoingListsRepository.getInstance(getContext()).getDoings(userNameOfUser);
+                    List<Done> mDoneList = DoneListsRepository.getInstance(getContext()).getDones(userNameOfUser);
                     List<ToDo> mToDoList = ToDoListsRepository.getInstance(getContext()).getToDoes(userNameOfUser);
                     ToDoListsRepository.getInstance(getContext()).deleteToDoes(mToDoList);
+                    DoingListsRepository.getInstance(getContext()).deleteDoings(mDoingList);
+                    DoneListsRepository.getInstance(getContext()).deleteDones(mDoneList);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
