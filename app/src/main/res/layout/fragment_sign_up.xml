@@ -15,7 +15,7 @@
         android:hint="UserName">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/login_username"
+            android:id="@+id/login_usernamee"
             android:layout_width="350dp"
             android:layout_height="60dp"
             android:layout_gravity="center"
@@ -31,7 +31,7 @@
         android:hint="Password">
 
         <EditText
-            android:id="@+id/editText_loginpassword"
+            android:id="@+id/editText_loginpasswordd"
             android:layout_width="350dp"
             android:layout_height="60dp"
             android:layout_gravity="center"

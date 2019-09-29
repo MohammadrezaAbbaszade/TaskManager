@@ -97,6 +97,9 @@ public class TodoListFragment extends Fragment {
             case R.id.delete_menu:
                 ShowMsgDialog(getActivity());
                 return true;
+            case R.id.log_out_menu:
+                getActivity().finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -18,6 +18,7 @@
     android:layout_gravity="top|center"
     android:src="@drawable/ic_avatar_circle"
     android:layout_marginBottom="70dp"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,23 +45,23 @@
             android:layout_width="350dp"
             android:layout_height="60dp"
             android:layout_gravity="center"
-            android:ems="10"
             android:layout_margin="8dp"
             android:background="@drawable/shape3"
-            android:inputType="numberPassword"
-            android:drawableLeft="@drawable/ic_password" />
+            android:drawableLeft="@drawable/ic_password"
+            android:ems="10"
+            android:inputType="numberPassword" />
     </com.google.android.material.textfield.TextInputLayout>
+
     <Button
         android:id="@+id/button_login"
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
+        android:layout_marginTop="50dp"
         android:background="@drawable/shape2"
         android:text="Login"
-        android:layout_marginTop="50dp"
-        android:textColor="#FFFFFF"
-        >
-    </Button>
+        android:textColor="#FFFFFF"></Button>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,12 +72,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reigster?" />
+            android:text="Register?" />
 
         <TextView
             android:id="@+id/button_signUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:text="SignUp"
             android:textSize="10sp" />
     </LinearLayout>
