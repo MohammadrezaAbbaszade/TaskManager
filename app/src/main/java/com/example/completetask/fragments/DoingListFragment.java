@@ -52,7 +52,7 @@ public class DoingListFragment extends Fragment {
     String userNameOfUser;
     private RecyclerView mRecyclerView;
     private DoingAdaptor doingAdaptor;
-    private TextView mEmptyText;
+    private ImageView mEmptyText;
     public static DoingListFragment newInstance(String userNameOfUser) {
 
         Bundle args = new Bundle();
@@ -244,11 +244,7 @@ public class DoingListFragment extends Fragment {
             public void onClick(DialogInterface dialog, int whichButton) {
                 try {
                     List<Doing> mDoingList = DoingListsRepository.getInstance(getContext()).getDoings(userNameOfUser);
-                    List<Done> mDoneList = DoneListsRepository.getInstance(getContext()).getDones(userNameOfUser);
-                    List<ToDo> mToDoList = ToDoListsRepository.getInstance(getContext()).getToDoes(userNameOfUser);
-                    ToDoListsRepository.getInstance(getContext()).deleteToDoes(mToDoList);
                     DoingListsRepository.getInstance(getContext()).deleteDoings(mDoingList);
-                    DoneListsRepository.getInstance(getContext()).deleteDones(mDoneList);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

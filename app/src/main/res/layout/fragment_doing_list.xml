@@ -6,12 +6,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
     tools:context=".fragments.DoingListFragment">
-    <TextView
+    <ImageView
         android:id="@+id/empty_indoingfragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="EmptyTask"
-        android:textSize="30sp"
+       android:src="@drawable/taskicon"
         android:layout_gravity="center"
         android:visibility="gone"/>
     <androidx.recyclerview.widget.RecyclerView

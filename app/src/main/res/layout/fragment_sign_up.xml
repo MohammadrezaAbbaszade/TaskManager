@@ -15,21 +15,30 @@
         android:hint="UserName">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/login_usernamee"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/login_username"
+            android:layout_width="350dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:background="@drawable/shape3"
             android:drawableLeft="@drawable/ic_username" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:hint="Password">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editText_loginpasswordd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <EditText
+            android:id="@+id/editText_loginpassword"
+            android:layout_width="350dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:ems="10"
+            android:layout_margin="8dp"
+            android:background="@drawable/shape3"
+            android:inputType="numberPassword"
             android:drawableLeft="@drawable/ic_password" />
     </com.google.android.material.textfield.TextInputLayout>
 

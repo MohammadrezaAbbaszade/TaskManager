@@ -56,7 +56,7 @@ public class TodoListFragment extends Fragment {
     private static final String USERNAME_OF_USER = "com.example.completetask.fragments.id of user";
     private List<ToDo> mToDoList;
     private ToDo mToDo;
-    private TextView mEmptyText;
+    private ImageView mEmptyText;
     private RecyclerView mRecyclerView;
     private int currentPosition;
     private String userNameOfUser;
@@ -256,12 +256,8 @@ public class TodoListFragment extends Fragment {
         dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 try {
-                    List<Doing> mDoingList = DoingListsRepository.getInstance(getContext()).getDoings(userNameOfUser);
-                    List<Done> mDoneList = DoneListsRepository.getInstance(getContext()).getDones(userNameOfUser);
                     List<ToDo> mToDoList = ToDoListsRepository.getInstance(getContext()).getToDoes(userNameOfUser);
                     ToDoListsRepository.getInstance(getContext()).deleteToDoes(mToDoList);
-                    DoingListsRepository.getInstance(getContext()).deleteDoings(mDoingList);
-                    DoneListsRepository.getInstance(getContext()).deleteDones(mDoneList);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

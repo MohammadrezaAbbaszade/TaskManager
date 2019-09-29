@@ -52,7 +52,7 @@ public class DoneListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     String userNameOfUser;
     private DoneAdaptor doneAdaptor;
-    private TextView mEmptyText;
+    private ImageView mEmptyText;
     public static DoneListFragment newInstance(String usernameOfUser) {
 
         Bundle args = new Bundle();
@@ -237,11 +237,7 @@ public class DoneListFragment extends Fragment {
         dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 try {
-                    List<Doing> mDoingList = DoingListsRepository.getInstance(getContext()).getDoings(userNameOfUser);
                     List<Done> mDoneList = DoneListsRepository.getInstance(getContext()).getDones(userNameOfUser);
-                    List<ToDo> mToDoList = ToDoListsRepository.getInstance(getContext()).getToDoes(userNameOfUser);
-                    ToDoListsRepository.getInstance(getContext()).deleteToDoes(mToDoList);
-                    DoingListsRepository.getInstance(getContext()).deleteDoings(mDoingList);
                     DoneListsRepository.getInstance(getContext()).deleteDones(mDoneList);
                 } catch (Exception e) {
                     e.printStackTrace();

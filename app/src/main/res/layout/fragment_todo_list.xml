@@ -7,12 +7,11 @@
     tools:context=".fragments.TodoListFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ImageView
         android:id="@+id/empty_intodofragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-       android:text="EmptyTask"
-        android:textSize="30sp"
+      android:src="@drawable/taskicon"
         android:layout_gravity="center"
         android:visibility="gone"/>
     <androidx.recyclerview.widget.RecyclerView
