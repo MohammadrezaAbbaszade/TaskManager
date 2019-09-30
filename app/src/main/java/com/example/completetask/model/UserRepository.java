@@ -56,20 +56,13 @@ public class UserRepository {
     }
     public List<User> getmUsers() {
         List<User> users = new ArrayList<>();
-        Cursor cursor = queryUser(null, null);
+       UserCursorWrapper cursor = queryUser(null, null);
         try {
             cursor.moveToFirst();
 
             while (!cursor.isAfterLast()) {
-                String strUUID = cursor.getString(cursor.getColumnIndex(TaskDBSchema.User.Cols.UUID));
-                String password = cursor.getString(cursor.getColumnIndex(TaskDBSchema.User.Cols.PASSWORD));
-                String usernamee = cursor.getString(cursor.getColumnIndex(TaskDBSchema.User.Cols.USERNAME));
 
-
-                User user = new User(UUID.fromString(strUUID));
-                user.setmPassword(password);
-                user.setmUserName(usernamee);
-                users.add(user);
+                users.add(cursor.getUser());
 
                 cursor.moveToNext();
             }
@@ -82,38 +75,28 @@ public class UserRepository {
     }
     public User getUser(UUID uuid) {
         String[] whereArgs = new String[]{uuid.toString()};
-        Cursor cursor = queryUser(TaskDBSchema.User.Cols.UUID + " = ?", whereArgs);
+       UserCursorWrapper cursor = queryUser(TaskDBSchema.User.Cols.UUID + " = ?", whereArgs);
 
         try {
             if (cursor == null || cursor.getCount() == 0)
                 return null;
 
             cursor.moveToFirst();
-
-            String strUUID = cursor.getString(cursor.getColumnIndex(TaskDBSchema.User.Cols.UUID));
-            String password = cursor.getString(cursor.getColumnIndex(TaskDBSchema.User.Cols.PASSWORD));
-            String usernamee = cursor.getString(cursor.getColumnIndex(TaskDBSchema.User.Cols.USERNAME));
-
-            User user = new User(UUID.fromString(strUUID));
-            user.setmPassword(password);
-            user.setmUserName(usernamee);
-
-
-
-            return user;
+            return cursor.getUser();
 
         } finally {
             cursor.close();
         }
     }
-    private Cursor queryUser(String where, String[] whereArgs) {
-        return mDatabase.query(TaskDBSchema.User.NAME,
+    private UserCursorWrapper queryUser(String where, String[] whereArgs) {
+        Cursor cursor= mDatabase.query(TaskDBSchema.User.NAME,
                 null,
                 where,
                 whereArgs,
                 null,
                 null,
                 null);
+        return new UserCursorWrapper(cursor);
     }
     private ContentValues getContentValues(User user) {
         ContentValues values = new ContentValues();

@@ -29,46 +29,28 @@ public class ToDoListsRepository {
         }
         return ourInstance;
     }
-    private Cursor queryToDo(String where, String[] whereArgs) {
-        return mDatabase.query(TaskDBSchema.ToDo.NAME,
+    private ToDoCursorWrapper queryToDo(String where, String[] whereArgs) {
+        Cursor cursor= mDatabase.query(TaskDBSchema.ToDo.NAME,
                 null,
                 where,
                 whereArgs,
                 null,
                 null,
                 null);
+        return new ToDoCursorWrapper(cursor);
     }
 
     public List<ToDo> getToDoes(String username) {
         List<ToDo> toDoList = new ArrayList<>();
 
-        Cursor cursor = queryToDo(null, null);
+       ToDoCursorWrapper cursor = queryToDo(null, null);
 
         try {
             cursor.moveToFirst();
 
             while (!cursor.isAfterLast()) {
-                String strUUID = cursor.getString(cursor.getColumnIndex(TaskDBSchema.ToDo.Cols.UUID));
-                String title = cursor.getString(cursor.getColumnIndex(TaskDBSchema.ToDo.Cols.TITLE));
-                String date = cursor.getString(cursor.getColumnIndex(TaskDBSchema.ToDo.Cols.DATE));
-                String time = cursor.getString(cursor.getColumnIndex(TaskDBSchema.ToDo.Cols.TIME));
-                boolean mToDoCheckBox = cursor.getInt(cursor.getColumnIndex(TaskDBSchema.ToDo.Cols.TODOCHECKBOX)) == 1;
-                boolean mDoingCheckBox = cursor.getInt(cursor.getColumnIndex(TaskDBSchema.ToDo.Cols.DOINGCHECKBOX)) == 1;
-                boolean mDoneCheckBox = cursor.getInt(cursor.getColumnIndex(TaskDBSchema.ToDo.Cols.DONECHECKBOX)) == 1;
-                String discription = cursor.getString(cursor.getColumnIndex(TaskDBSchema.ToDo.Cols.DISCRIPTION));
-                String usernamee = cursor.getString(cursor.getColumnIndex(TaskDBSchema.ToDo.Cols.USERNAME));
 
-
-                ToDo toDo = new ToDo(UUID.fromString(strUUID));
-                toDo.setTitle(title);
-                toDo.setDate(date);
-                toDo.setToDo(mToDoCheckBox);
-                toDo.setDoing(mDoingCheckBox);
-                toDo.setDone(mDoneCheckBox);
-                toDo.setUserName(usernamee);
-                toDo.setDiscriptin(discription);
-                toDo.setTime(time);
-                toDoList.add(toDo);
+                toDoList.add(cursor.getToDo());
 
                 cursor.moveToNext();
             }
@@ -87,36 +69,13 @@ public class ToDoListsRepository {
 
     public ToDo getToDo(UUID uuid) {
         String[] whereArgs = new String[]{uuid.toString()};
-        Cursor cursor = queryToDo(TaskDBSchema.ToDo.Cols.UUID + " = ?", whereArgs);
+        ToDoCursorWrapper cursor = queryToDo(TaskDBSchema.ToDo.Cols.UUID + " = ?", whereArgs);
 
         try {
             if (cursor == null || cursor.getCount() == 0)
                 return null;
-
             cursor.moveToFirst();
-
-            String strUUID = cursor.getString(cursor.getColumnIndex(TaskDBSchema.ToDo.Cols.UUID));
-            String title = cursor.getString(cursor.getColumnIndex(TaskDBSchema.ToDo.Cols.TITLE));
-            String date = cursor.getString(cursor.getColumnIndex(TaskDBSchema.ToDo.Cols.DATE));
-            String time = cursor.getString(cursor.getColumnIndex(TaskDBSchema.ToDo.Cols.TIME));
-            boolean mToDoCheckBox = cursor.getInt(cursor.getColumnIndex(TaskDBSchema.ToDo.Cols.TODOCHECKBOX)) == 1;
-            boolean mDoingCheckBox = cursor.getInt(cursor.getColumnIndex(TaskDBSchema.ToDo.Cols.DOINGCHECKBOX)) == 1;
-            boolean mDoneCheckBox = cursor.getInt(cursor.getColumnIndex(TaskDBSchema.ToDo.Cols.DONECHECKBOX)) == 1;
-            String discription = cursor.getString(cursor.getColumnIndex(TaskDBSchema.ToDo.Cols.DISCRIPTION));
-            String username = cursor.getString(cursor.getColumnIndex(TaskDBSchema.ToDo.Cols.USERNAME));
-
-            ToDo toDo = new ToDo(UUID.fromString(strUUID));
-            toDo.setTitle(title);
-            toDo.setDate(date);
-            toDo.setToDo(mToDoCheckBox);
-            toDo.setDoing(mDoingCheckBox);
-            toDo.setDone(mDoneCheckBox);
-            toDo.setUserName(username);
-            toDo.setDiscriptin(discription);
-            toDo.setTime(time);
-
-
-            return toDo;
+            return cursor.getToDo();
 
         } finally {
             cursor.close();

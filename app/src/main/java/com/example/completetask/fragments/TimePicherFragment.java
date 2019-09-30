@@ -72,9 +72,17 @@ public class TimePicherFragment extends DiaLogFragment {
     }
 
     private String extractTime() {
+        String state;
         int hour = mTimePicker.getCurrentHour();
         int minute = mTimePicker.getCurrentMinute();
-        String timeString = String.format("%02d/%02d", hour, minute);
+        if(hour==0||hour<12) {
+            state = "AM";
+        }
+        else {
+            state = "PM";
+        }
+
+        String timeString = String.format("%02d/%02d %s", hour, minute,state);
         return timeString;
     }
 

@@ -30,46 +30,28 @@ public class DoneListsRepository {
         return ourInstance;
     }
 
-    private Cursor queryDone(String where, String[] whereArgs) {
-        return mDatabase.query(TaskDBSchema.Done.NAME,
+    private DoneCursorWrapper queryDone(String where, String[] whereArgs) {
+        Cursor cursor= mDatabase.query(TaskDBSchema.Done.NAME,
                 null,
                 where,
                 whereArgs,
                 null,
                 null,
                 null);
+        return new DoneCursorWrapper(cursor);
     }
 
     public List<Done> getDones(String username) {
         List<Done> doneList = new ArrayList<>();
 
-        Cursor cursor = queryDone(null, null);
+        DoneCursorWrapper cursor = queryDone(null, null);
 
         try {
             cursor.moveToFirst();
 
             while (!cursor.isAfterLast()) {
-                String strUUID = cursor.getString(cursor.getColumnIndex(TaskDBSchema.Done.Cols.UUID));
-                String title = cursor.getString(cursor.getColumnIndex(TaskDBSchema.Done.Cols.TITLE));
-                String date = cursor.getString(cursor.getColumnIndex(TaskDBSchema.Done.Cols.DATE));
-                String time = cursor.getString(cursor.getColumnIndex(TaskDBSchema.Done.Cols.TIME));
-                boolean mToDoCheckBox = cursor.getInt(cursor.getColumnIndex(TaskDBSchema.Done.Cols.TODOCHECKBOX)) == 1;
-                boolean mDoingCheckBox = cursor.getInt(cursor.getColumnIndex(TaskDBSchema.Done.Cols.DOINGCHECKBOX)) == 1;
-                boolean mDoneCheckBox = cursor.getInt(cursor.getColumnIndex(TaskDBSchema.Done.Cols.DONECHECKBOX)) == 1;
-                String discription = cursor.getString(cursor.getColumnIndex(TaskDBSchema.Done.Cols.DISCRIPTION));
-                String usernamee = cursor.getString(cursor.getColumnIndex(TaskDBSchema.Done.Cols.USERNAME));
 
-
-                Done done = new Done(UUID.fromString(strUUID));
-                done.setTitle(title);
-                done.setDate(date);
-                done.setToDo(mToDoCheckBox);
-                done.setDoing(mDoingCheckBox);
-                done.setDone(mDoneCheckBox);
-                done.setUserName(usernamee);
-                done.setDiscriptin(discription);
-                done.setTime(time);
-                doneList.add(done);
+                doneList.add(cursor.getDone());
 
                 cursor.moveToNext();
             }
@@ -88,7 +70,7 @@ public class DoneListsRepository {
 
     public Done getDone(UUID uuid) {
         String[] whereArgs = new String[]{uuid.toString()};
-        Cursor cursor = queryDone(TaskDBSchema.Done.Cols.UUID + " = ?", whereArgs);
+        DoneCursorWrapper cursor = queryDone(TaskDBSchema.Done.Cols.UUID + " = ?", whereArgs);
 
         try {
             if (cursor == null || cursor.getCount() == 0)
@@ -96,28 +78,7 @@ public class DoneListsRepository {
 
             cursor.moveToFirst();
 
-            String strUUID = cursor.getString(cursor.getColumnIndex(TaskDBSchema.Done.Cols.UUID));
-            String title = cursor.getString(cursor.getColumnIndex(TaskDBSchema.Done.Cols.TITLE));
-            String date = cursor.getString(cursor.getColumnIndex(TaskDBSchema.Done.Cols.DATE));
-            String time = cursor.getString(cursor.getColumnIndex(TaskDBSchema.Done.Cols.TIME));
-            boolean mToDoCheckBox = cursor.getInt(cursor.getColumnIndex(TaskDBSchema.Done.Cols.TODOCHECKBOX)) == 1;
-            boolean mDoingCheckBox = cursor.getInt(cursor.getColumnIndex(TaskDBSchema.Done.Cols.DOINGCHECKBOX)) == 1;
-            boolean mDoneCheckBox = cursor.getInt(cursor.getColumnIndex(TaskDBSchema.Done.Cols.DONECHECKBOX)) == 1;
-            String discription = cursor.getString(cursor.getColumnIndex(TaskDBSchema.Done.Cols.DISCRIPTION));
-            String usernamee = cursor.getString(cursor.getColumnIndex(TaskDBSchema.Done.Cols.USERNAME));
-
-            Done done = new Done(UUID.fromString(strUUID));
-            done.setTitle(title);
-            done.setDate(date);
-            done.setToDo(mToDoCheckBox);
-            done.setDoing(mDoingCheckBox);
-            done.setDone(mDoneCheckBox);
-            done.setUserName(usernamee);
-            done.setDiscriptin(discription);
-            done.setTime(time);
-
-
-            return done;
+            return cursor.getDone();
 
         } finally {
             cursor.close();
