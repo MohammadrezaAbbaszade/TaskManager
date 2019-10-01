@@ -77,10 +77,10 @@ public class UsersTasksFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_users_tasks, container, false);
         init(view);
-        checkEmptyImage();
         creatRecycler();
         creatRecycler2();
         creatRecycler3();
+        checkEmptyImage();
         return view;
     }
 
@@ -304,10 +304,10 @@ public class UsersTasksFragment extends Fragment {
         if (resultCode != Activity.RESULT_OK || data == null)
             return;
         if (requestCode == REQUEST_CODE_FOR_CHANGE_FRAGMENT) {
-            checkEmptyImage();
             creatRecycler();
             creatRecycler2();
             creatRecycler3();
+            checkEmptyImage();
         }
     }
 
