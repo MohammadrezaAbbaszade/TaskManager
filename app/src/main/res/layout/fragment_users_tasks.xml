@@ -8,6 +8,17 @@
     tools:context=".fragments.UsersTasksFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/users_tasks_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/users_tasks_recycler2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
     <ImageView
         android:id="@+id/empty_users_tasks_fragment"
         android:layout_width="wrap_content"
@@ -16,25 +27,9 @@
         android:layout_gravity="center"
         android:visibility="gone"/>
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/users_tasks_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-         />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/users_tasks_recycler2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        />
-    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/users_tasks_recycler3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         />
 
 </LinearLayout>

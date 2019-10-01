@@ -7,12 +7,16 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -55,7 +59,33 @@ public class UsersListFragment extends Fragment {
     public UsersListFragment() {
         // Required empty public constructor
     }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu, menu);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_menu:
+                ShowMsgDialog(getActivity(),mUserList);
+                return true;
+            case R.id.log_out_menu:
+                getActivity().finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -174,7 +204,34 @@ public class UsersListFragment extends Fragment {
         });
         dlgAlert.show();
     }
+    public void ShowMsgDialog(Context self, final List<User> mUserList) {
+        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(self);
+        dlgAlert.setMessage("Are You Sure?");
+        dlgAlert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                try {
+                    for(int i=0;i<mUserList.size();i++) {
+                        deleteTasks(mUserList.get(i));
+                    }
+                    for(int i=0;i<mUserList.size();i++) {
+                        UserRepository.getInstance(getContext()).deleteUser(mUserList.get(i));
+                    }
 
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                creatRecycler();
+            }
+        });
+        dlgAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                dialog.dismiss();
+            }
+        });
+        dlgAlert.show();
+    }
     private void deleteTasks(User mUser) throws Exception {
         List<ToDo> mToDoList = ToDoListsRepository.getInstance(getContext()).getToDoes(mUser.getmUserName());
         if (mToDoList.size() != 0){
