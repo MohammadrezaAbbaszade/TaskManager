@@ -321,26 +321,5 @@ public class UsersTasksFragment extends Fragment {
         doneAdaptor3 = new UserAdaptor3(mDoneList);
         mRecyclerView3.setAdapter(doneAdaptor3);
     }
-    public void ShowMsgDialog(Context self, final User mUser) {
-        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(self);
-        dlgAlert.setMessage("Do you want To Delete This User?");
-        dlgAlert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                try {
-                    UserRepository.getInstance(getContext()).deleteUser(mUser);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                creatRecycler();
-            }
-        });
-        dlgAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
-                dialog.dismiss();
-            }
-        });
-        dlgAlert.show();
-    }
+
 }
