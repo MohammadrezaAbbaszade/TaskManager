@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -64,11 +67,32 @@ public class UsersTasksFragment extends Fragment {
     public UsersTasksFragment() {
         // Required empty public constructor
     }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu, menu);
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_menu:
+                ShowMsgDialog(getActivity());
+                return true;
+            case R.id.log_out_menu:
+                getActivity().finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userName = getArguments().getString(USERNAME);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -339,5 +363,34 @@ public class UsersTasksFragment extends Fragment {
         doneAdaptor3 = new UserAdaptor3(mDoneList);
         mRecyclerView3.setAdapter(doneAdaptor3);
     }
-
+    public void ShowMsgDialog(Context self) {
+        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(self);
+        dlgAlert.setMessage("Are you Sure?");
+        dlgAlert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                try {
+                    List<ToDo> mToDoList = ToDoListsRepository.getInstance(getContext()).getToDoes(userName);
+                    ToDoListsRepository.getInstance(getContext()).deleteToDoes(mToDoList);
+                    List<Doing> mDoingList = DoingListsRepository.getInstance(getContext()).getDoings(userName);
+                    DoingListsRepository.getInstance(getContext()).deleteDoings(mDoingList);
+                    List<Done> mDoneList = DoneListsRepository.getInstance(getContext()).getDones(userName);
+                    DoneListsRepository.getInstance(getContext()).deleteDones(mDoneList);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                creatRecycler();
+                creatRecycler2();
+                creatRecycler3();
+                checkEmptyImage();
+            }
+        });
+        dlgAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                dialog.dismiss();
+            }
+        });
+        dlgAlert.show();
+    }
 }
