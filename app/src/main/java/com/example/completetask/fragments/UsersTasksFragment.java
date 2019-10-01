@@ -68,7 +68,7 @@ public class UsersTasksFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userName=getArguments().getString(USERNAME);
+        userName = getArguments().getString(USERNAME);
     }
 
     @Override
@@ -77,6 +77,7 @@ public class UsersTasksFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_users_tasks, container, false);
         init(view);
+        checkEmptyImage();
         creatRecycler();
         creatRecycler2();
         creatRecycler3();
@@ -100,7 +101,7 @@ public class UsersTasksFragment extends Fragment {
             mItemDiscriptionTextView = itemView.findViewById(R.id.item_discription);
             mItemDateTextView = itemView.findViewById(R.id.item_date);
             mItemShapeTextView = itemView.findViewById(R.id.item_shape_text);
-            mState=itemView.findViewById(R.id.item_state_cardview);
+            mState = itemView.findViewById(R.id.item_state_cardview);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -121,10 +122,11 @@ public class UsersTasksFragment extends Fragment {
             mItemDiscriptionTextView.setText(toDo.getDiscriptin());
             mItemShapeTextView.setText(stringForShapeText);
             mState.setText(R.string.todo);
-            mItemDateTextView.setText(toDo.getDate()+","+toDo.getTime());
+            mItemDateTextView.setText(toDo.getDate() + "," + toDo.getTime());
             mToDo = toDo;
         }
     }
+
     private class UserHolder2 extends RecyclerView.ViewHolder {
         private TextView mItemTitleTextView;
         private TextView mItemDiscriptionTextView;
@@ -139,12 +141,12 @@ public class UsersTasksFragment extends Fragment {
             mItemDiscriptionTextView = itemView.findViewById(R.id.item_discription);
             mItemDateTextView = itemView.findViewById(R.id.item_date);
             mItemShapeTextView = itemView.findViewById(R.id.item_shape_text);
-            mState=itemView.findViewById(R.id.item_state_cardview);
+            mState = itemView.findViewById(R.id.item_state_cardview);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     ChangeDialogFragment changeDialogFragment = ChangeDialogFragment.newInstance(mDoing.getTitle()
-                            , mDoing.getDiscriptin(), mDoing.getDate(), mDoing.getTime(),userName, mDoing.getUUID(), 3);
+                            , mDoing.getDiscriptin(), mDoing.getDate(), mDoing.getTime(), userName, mDoing.getUUID(), 3);
                     changeDialogFragment.setTargetFragment(UsersTasksFragment.this, REQUEST_CODE_FOR_CHANGE_FRAGMENT);
                     changeDialogFragment.show(getFragmentManager(), CHANGE_DIALOG_FRAGMENT_TAG);
 
@@ -161,10 +163,11 @@ public class UsersTasksFragment extends Fragment {
             mItemDiscriptionTextView.setText(doing.getDiscriptin());
             mItemShapeTextView.setText(stringForShapeText);
             mState.setText(R.string.doing);
-            mItemDateTextView.setText(doing.getDate()+","+doing.getTime());
+            mItemDateTextView.setText(doing.getDate() + "," + doing.getTime());
             mDoing = doing;
         }
     }
+
     private class UserHolder3 extends RecyclerView.ViewHolder {
         private TextView mItemTitleTextView;
         private TextView mItemDiscriptionTextView;
@@ -179,7 +182,7 @@ public class UsersTasksFragment extends Fragment {
             mItemDiscriptionTextView = itemView.findViewById(R.id.item_discription);
             mItemDateTextView = itemView.findViewById(R.id.item_date);
             mItemShapeTextView = itemView.findViewById(R.id.item_shape_text);
-            mState=itemView.findViewById(R.id.item_state_cardview);
+            mState = itemView.findViewById(R.id.item_state_cardview);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -195,13 +198,13 @@ public class UsersTasksFragment extends Fragment {
         }
 
         public void bind(Done done) {
-            Character shapeText=done.getTitle().charAt(0);
-            String stringForShapeText=shapeText.toString();
+            Character shapeText = done.getTitle().charAt(0);
+            String stringForShapeText = shapeText.toString();
             mItemTitleTextView.setText(done.getTitle());
             mItemDiscriptionTextView.setText(done.getDiscriptin());
             mItemShapeTextView.setText(stringForShapeText);
             mState.setText(R.string.done);
-            mItemDateTextView.setText(done.getDate()+","+done.getTime());
+            mItemDateTextView.setText(done.getDate() + "," + done.getTime());
             mDone = done;
         }
     }
@@ -231,11 +234,12 @@ public class UsersTasksFragment extends Fragment {
             return mToDoList.size();
         }
     }
+
     private class UserAdaptor2 extends RecyclerView.Adapter<UserHolder2> {
         private List<Doing> mDoingList;
 
         public UserAdaptor2(List<Doing> doingList) {
-           mDoingList = doingList;
+            mDoingList = doingList;
         }
 
         @NonNull
@@ -256,11 +260,12 @@ public class UsersTasksFragment extends Fragment {
             return mDoingList.size();
         }
     }
+
     private class UserAdaptor3 extends RecyclerView.Adapter<UserHolder3> {
         private List<Done> mDoneList;
 
         public UserAdaptor3(List<Done> doneList) {
-           mDoneList = doneList;
+            mDoneList = doneList;
         }
 
         @NonNull
@@ -281,6 +286,7 @@ public class UsersTasksFragment extends Fragment {
             return mDoneList.size();
         }
     }
+
     private void init(View view) {
         mRecyclerView = view.findViewById(R.id.users_tasks_recycler);
         mRecyclerView2 = view.findViewById(R.id.users_tasks_recycler2);
@@ -288,6 +294,7 @@ public class UsersTasksFragment extends Fragment {
         mEmptyText = view.findViewById(R.id.empty_users_tasks_fragment);
 
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         String[] valueFromDiaLogFragment;
@@ -297,9 +304,18 @@ public class UsersTasksFragment extends Fragment {
         if (resultCode != Activity.RESULT_OK || data == null)
             return;
         if (requestCode == REQUEST_CODE_FOR_CHANGE_FRAGMENT) {
+            checkEmptyImage();
             creatRecycler();
             creatRecycler2();
             creatRecycler3();
+        }
+    }
+
+    private void checkEmptyImage() {
+        if (mDoneList.size() == 0 && mDoingList.size() == 0 && mToDoList.size() == 0) {
+            mEmptyText.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyText.setVisibility(View.GONE);
         }
     }
 
@@ -309,12 +325,14 @@ public class UsersTasksFragment extends Fragment {
         toDoAdaptor = new UserAdaptor(mToDoList);
         mRecyclerView.setAdapter(toDoAdaptor);
     }
+
     private void creatRecycler2() {
         mDoingList = DoingListsRepository.getInstance(getContext()).getDoings(userName);
         mRecyclerView2.setLayoutManager(new LinearLayoutManager(getActivity()));
         doingAdaptor2 = new UserAdaptor2(mDoingList);
         mRecyclerView2.setAdapter(doingAdaptor2);
     }
+
     private void creatRecycler3() {
         mDoneList = DoneListsRepository.getInstance(getContext()).getDones(userName);
         mRecyclerView3.setLayoutManager(new LinearLayoutManager(getActivity()));
