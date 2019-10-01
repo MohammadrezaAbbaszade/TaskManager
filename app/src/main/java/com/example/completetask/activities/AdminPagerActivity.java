@@ -20,17 +20,11 @@ import com.google.android.material.tabs.TabLayout;
 
 public class AdminPagerActivity extends SingleActivity{
     private static final String USER_OF_ADMIN = "com.example.completetask.id of user";
-    private ViewPager mViewPager;
-    private TabLayout mTabLayout;
-    private String usernameOfUser;
-
     public static Intent newIntent(Context context, String usernameOfUser) {
         Intent intent = new Intent(context, AdminPagerActivity.class);
         intent.putExtra(USER_OF_ADMIN, usernameOfUser);
         return intent;
     }
-
-
     @Override
     public Fragment onCreatFragment() {
         return UsersListFragment.newInstance();
