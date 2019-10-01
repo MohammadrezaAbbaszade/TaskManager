@@ -62,8 +62,19 @@ public class TaskDBSchema {
             public static final String UUID = "uuid";
             public static final String USERNAME = "username";
             public static final String PASSWORD = "password";
+            public static final String TIMETOREGISTER="timetoregister";
 
         }
     }
+    public static final class Admin {
+        public static final String NAME = "Admin";
 
+        public static final class Cols {
+            public static final String _ID = "_id";
+            public static final String UUID = "uuid";
+            public static final String USERNAME = "username";
+            public static final String PASSWORD = "password";
+
+        }
+    }
 }

@@ -15,11 +15,12 @@ public class UserCursorWrapper extends CursorWrapper {
         String strUUID = getString(getColumnIndex(TaskDBSchema.User.Cols.UUID));
         String password = getString(getColumnIndex(TaskDBSchema.User.Cols.PASSWORD));
         String usernamee = getString(getColumnIndex(TaskDBSchema.User.Cols.USERNAME));
-
+        String timeRegister = getString(getColumnIndex(TaskDBSchema.User.Cols.TIMETOREGISTER));
 
         User user = new User(UUID.fromString(strUUID));
         user.setmPassword(password);
         user.setmUserName(usernamee);
+        user.setTimeRegister(timeRegister);
         return user;
     }
 }

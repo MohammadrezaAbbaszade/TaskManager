@@ -4,6 +4,7 @@ package com.example.completetask.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -13,24 +14,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.completetask.activities.LoginActivity;
 import com.example.completetask.R;
+import com.example.completetask.activities.AdminActivity;
+import com.example.completetask.activities.LoginActivity;
+import com.example.completetask.model.Admin;
+import com.example.completetask.model.AdminRepository;
 import com.example.completetask.model.User;
 import com.example.completetask.model.UserRepository;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
-
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SignUpFragment extends Fragment {
-    public static final String USER_PASS_FIELD = "UserPassField";
-    private static final String VALUE_FROM_LOGIN_FRAGMENT = "values_from_LoginFragment";
+public class AdminSignUpFragment extends Fragment {
+    private static final String VALUE_FROM_ADMIN_LOGIN_FRAGMENT = "com.example.completetask.fragments.values_from_LoginFragment";
     private Button mButtonSignUp;
     private EditText mUserNameEditText;
     private EditText mPasswordEditText;
@@ -40,27 +36,31 @@ public class SignUpFragment extends Fragment {
     boolean answer = true;
 
 
-    public static SignUpFragment newInstance(String[] valuesFromLoginFragment) {
+    public static AdminSignUpFragment newInstance(String[] valuesFromAdminFragment) {
 
         Bundle args = new Bundle();
-        args.putStringArray(VALUE_FROM_LOGIN_FRAGMENT, valuesFromLoginFragment);
-        SignUpFragment fragment = new SignUpFragment();
+
+        AdminSignUpFragment fragment = new AdminSignUpFragment();
+        args.putStringArray(VALUE_FROM_ADMIN_LOGIN_FRAGMENT, valuesFromAdminFragment);
         fragment.setArguments(args);
         return fragment;
     }
-
-    public SignUpFragment() {
+    public AdminSignUpFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
+       View view= inflater.inflate(R.layout.fragment_admin_sign_up, container, false);
         init(view);
-        data = getArguments().getStringArray(VALUE_FROM_LOGIN_FRAGMENT);
+        data = getArguments().getStringArray(VALUE_FROM_ADMIN_LOGIN_FRAGMENT);
         username = data[0];
         password = data[1];
         mUserNameEditText.setText(username);
@@ -71,45 +71,38 @@ public class SignUpFragment extends Fragment {
                 String username = mUserNameEditText.getText().toString();
                 String password = mPasswordEditText.getText().toString();
                 String[] value = {username, password};
-                User user = new User();
-                user.setmUserName(username);
-                user.setmPassword(password);
-                initDate(user);
+                Admin admin = new Admin();
+                admin.setmUserName(username);
+                admin.setmPassword(password);
                 if (username.equals("") || password.equals("")) {
                     Toast.makeText(getActivity(), "Empty username or password", Toast.LENGTH_SHORT).show();
-                } else if (UserRepository.getInstance(getContext()).checkUserName(username)) {
-                    Toast.makeText(getActivity(), "This UserName is Exist", Toast.LENGTH_SHORT).show();
+                } else if (AdminRepository.getInstance(getContext()).checkUserName(username)) {
+                    Toast.makeText(getActivity(), "This Admin is Exist", Toast.LENGTH_SHORT).show();
                 } else {
                     try {
-                        UserRepository.getInstance(getContext()).addUser(user);
+                        AdminRepository.getInstance(getContext()).addAdmin(admin);
                         answer = false;
                     } catch (IllegalArgumentException e) {
                         e.getMessage();
-                        Toast.makeText(getActivity(), "This User Is Exist!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "This Admin Is Exist!", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 if (answer == false) {
-                    Intent resultIntent = LoginActivity.newIntent(getActivity(), value, user);
+                    Intent resultIntent = AdminActivity.newIntent(getActivity(), value, admin);
                     startActivity(resultIntent);
                 }
             }
         });
-        return view;
 
+
+       return view;
     }
-
     private void init(View view) {
 
-        mButtonSignUp = view.findViewById(R.id.button_signUp);
-        mUserNameEditText = view.findViewById(R.id.login_usernamee);
-        mPasswordEditText = view.findViewById(R.id.editText_loginpasswordd);
-    }
-
-    private void initDate(User user) {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss",Locale.US);
-        String dateString =formatter.format(calendar.getTime());
-        user.setTimeRegister(dateString);
+        mButtonSignUp = view.findViewById(R.id.button_signUp_admin);
+        mUserNameEditText = view.findViewById(R.id.login_usernamee_signup_admin);
+        mPasswordEditText = view.findViewById(R.id.editText_loginpasswordd_signup_admin);
     }
 }
+

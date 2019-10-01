@@ -88,6 +88,14 @@ public class UserRepository {
             cursor.close();
         }
     }
+    public void deleteUser(User user) throws Exception {
+        User u = getUser(user.getUUID());
+        if (u == null)
+            throw new Exception("This crime does not exist!!!");
+        String where = TaskDBSchema.User.Cols.UUID + " = ?";
+        String[] whereArgs = new String[]{user.getUUID().toString()};
+        mDatabase.delete(TaskDBSchema.User.NAME, where, whereArgs);
+    }
     private UserCursorWrapper queryUser(String where, String[] whereArgs) {
         Cursor cursor= mDatabase.query(TaskDBSchema.User.NAME,
                 null,
@@ -103,6 +111,7 @@ public class UserRepository {
         values.put(TaskDBSchema.User.Cols.UUID, user.getUUID().toString());
         values.put(TaskDBSchema.User.Cols.PASSWORD, user.getmPassword());
         values.put(TaskDBSchema.User.Cols.USERNAME, user.getmUserName());
+        values.put(TaskDBSchema.User.Cols .TIMETOREGISTER, user.getTimeRegister());
 
         return values;
     }

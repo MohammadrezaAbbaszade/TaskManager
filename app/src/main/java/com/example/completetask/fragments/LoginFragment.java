@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.completetask.activities.AdminActivity;
 import com.google.android.material.button.MaterialButton;
 
 import com.example.completetask.activities.FragmentsMainActivity;
@@ -41,6 +43,7 @@ public class LoginFragment extends Fragment {
     private EditText mPasswordEditText;
     String[] valueFromSignUpFragment;
     private String username;
+    private Button mAdmin;
 
     public static LoginFragment newInstance(String[] valueFromSignUpFragment, String usernameFromSignUpFragment) {
 
@@ -60,7 +63,7 @@ public class LoginFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         valueFromSignUpFragment = getArguments().getStringArray(VALUE_FROM_SIGN_UP_FRAGMENT);
-        username =getArguments().getString(USERNAME_FROM_SIGN_UP_FRAGMENT);
+        username = getArguments().getString(USERNAME_FROM_SIGN_UP_FRAGMENT);
     }
 
     @Override
@@ -74,7 +77,7 @@ public class LoginFragment extends Fragment {
             mPasswordEditText.setText(valueFromSignUpFragment[1]);
         }
 
-       mButtonSignUpTextVview.setOnClickListener(new View.OnClickListener() {
+        mButtonSignUpTextVview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String usrname = mUserNameEditText.getText().toString();
@@ -91,7 +94,7 @@ public class LoginFragment extends Fragment {
                 String password = mPasswordEditText.getText().toString();
                 if (UserRepository.getInstance(getContext()).login(usrname, password)) {
                     Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
-                    Intent intent = FragmentsMainActivity.newIntent(getActivity(),usrname);
+                    Intent intent = FragmentsMainActivity.newIntent(getActivity(), usrname);
                     intent.putExtra(LOGIN_VALUE, usrname);
                     startActivity(intent);
                 } else {
@@ -99,13 +102,22 @@ public class LoginFragment extends Fragment {
                 }
             }
         });
+        mAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
+                Intent intent =new Intent(getActivity(),AdminActivity.class);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 
     private void init(View view) {
         mButtonLogin = view.findViewById(R.id.button_login);
-       mButtonSignUpTextVview = view.findViewById(R.id.button_signUp);
+        mButtonSignUpTextVview = view.findViewById(R.id.button_signUp);
         mUserNameEditText = view.findViewById(R.id.login_username);
         mPasswordEditText = view.findViewById(R.id.editText_loginpassword);
+        mAdmin = view.findViewById(R.id.admin);
     }
 }

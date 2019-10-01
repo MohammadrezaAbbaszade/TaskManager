@@ -54,7 +54,14 @@ public class TaskOpenHelper extends SQLiteOpenHelper {
                 TaskDBSchema.User.Cols._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 TaskDBSchema.User.Cols.UUID + "," +
                 TaskDBSchema.User.Cols.USERNAME + "," +
-                TaskDBSchema.User.Cols.PASSWORD +
+                TaskDBSchema.User.Cols.PASSWORD + ","+
+                TaskDBSchema.User.Cols.TIMETOREGISTER +
+                ");");
+        sqLiteDatabase.execSQL("CREATE TABLE " + TaskDBSchema.Admin.NAME + "(" +
+                TaskDBSchema.Admin.Cols._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                TaskDBSchema.Admin.Cols.UUID + "," +
+                TaskDBSchema.Admin.Cols.USERNAME + "," +
+                TaskDBSchema.Admin.Cols.PASSWORD +
                 ");");
     }
 

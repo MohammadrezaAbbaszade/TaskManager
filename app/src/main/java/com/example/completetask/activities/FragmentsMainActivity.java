@@ -54,7 +54,6 @@ public class FragmentsMainActivity extends AppCompatActivity {
             public int getCount() {
                 return 3;
             }
-
             @Nullable
             @Override
             public CharSequence getPageTitle(int position) {
@@ -70,4 +69,5 @@ public class FragmentsMainActivity extends AppCompatActivity {
         mTabLayout.setupWithViewPager(mViewPager);
 
     }
+
 }

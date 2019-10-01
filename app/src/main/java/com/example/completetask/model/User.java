@@ -5,7 +5,16 @@ import java.util.UUID;
 public class User {
     private String mUserName;
     private String mPassword;
+    private String mTimeRegister;
     private UUID mUUID;
+
+    public String getTimeRegister() {
+        return mTimeRegister;
+    }
+
+    public void setTimeRegister(String timeRegister) {
+        mTimeRegister = timeRegister;
+    }
 
     public UUID getUUID() {
         return mUUID;
