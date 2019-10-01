@@ -65,7 +65,11 @@ public class DoingListFragment extends Fragment {
     public DoingListFragment() {
         // Required empty public constructor
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        creatRecycler();
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +129,7 @@ public class DoingListFragment extends Fragment {
         private TextView mItemDiscriptionTextView;
         private TextView mItemDateTextView;
         private TextView mItemShapeTextView;
+        private TextView mState;
         private Doing mDoing;
 
         public DoingHolder(@NonNull View itemView) {
@@ -133,6 +138,7 @@ public class DoingListFragment extends Fragment {
             mItemDiscriptionTextView = itemView.findViewById(R.id.item_discription);
             mItemDateTextView = itemView.findViewById(R.id.item_date);
             mItemShapeTextView = itemView.findViewById(R.id.item_shape_text);
+            mState=itemView.findViewById(R.id.item_state_cardview);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -151,7 +157,8 @@ public class DoingListFragment extends Fragment {
             mItemTitleTextView.setText(doing.getTitle());
             mItemDiscriptionTextView.setText(doing.getDiscriptin());
             mItemShapeTextView.setText(stringForShapeText);
-            mItemDateTextView.setText(doing.getDate());
+            mState.setText(R.string.doing);
+            mItemDateTextView.setText(doing.getDate()+","+doing.getTime());
             mDoing = doing;
         }
     }
@@ -200,30 +207,25 @@ public class DoingListFragment extends Fragment {
             valueFromDiaLogFragment = data.getStringArrayExtra(DiaLogFragment.getTitleAndDiscription());
             dateFromDialogFragment = data.getStringExtra(DiaLogFragment.getDateFromDatepicker());
             timeFromDialogFragment = data.getStringExtra(DiaLogFragment.newInstance().getTIME_FROM_TIMEPICKER());
-            taskState = data.getBooleanArrayExtra(DiaLogFragment.newInstance().getCHECKBOXES_STATE());
-            setToDoClass(valueFromDiaLogFragment, taskState, dateFromDialogFragment, timeFromDialogFragment);
+            setToDoClass(valueFromDiaLogFragment, dateFromDialogFragment, timeFromDialogFragment);
         }
         if (requestCode == REQUEST_CODE_FOR_CHANGE_FRAGMENT) {
             creatRecycler();
         }
     }
 
-    private void setToDoClass(String[] valueFromDiaLogFragment, boolean[] taskState, String dateFromDialogFragment
+    private void setToDoClass(String[] valueFromDiaLogFragment, String dateFromDialogFragment
             , String timeFromDialogFragment) {
         mDoing = new Doing();
         if (valueFromDiaLogFragment != null) {
             mDoing.setTitle(valueFromDiaLogFragment[0]);
             mDoing.setDiscriptin(valueFromDiaLogFragment[1]);
             mDoing.setUserName(userNameOfUser);
+            mDoing.setDoing(true);
         }
         if (dateFromDialogFragment != null && timeFromDialogFragment != null) {
             mDoing.setDate(dateFromDialogFragment);
             mDoing.setTime(timeFromDialogFragment);
-        }
-        if (taskState != null) {
-            mDoing.setDoing(taskState[0]);
-            mDoing.setDone(taskState[1]);
-            mDoing.setToDo(taskState[2]);
         }
         DoingListsRepository.getInstance(getContext()).insertDoing(mDoing);
         creatRecycler();

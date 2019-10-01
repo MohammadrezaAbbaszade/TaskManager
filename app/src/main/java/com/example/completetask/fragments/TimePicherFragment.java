@@ -82,7 +82,7 @@ public class TimePicherFragment extends DiaLogFragment {
             state = "PM";
         }
 
-        String timeString = String.format("%02d/%02d %s", hour, minute,state);
+        String timeString = String.format("%02d:%02d %s", hour, minute,state);
         return timeString;
     }
 

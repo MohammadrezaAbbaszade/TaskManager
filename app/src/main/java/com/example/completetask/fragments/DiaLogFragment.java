@@ -91,52 +91,7 @@ public class DiaLogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_dia_log, null, false);
         init(view);
-        mCheckBoxDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if (mCheckBoxToDo.isChecked()) {
-                    mCheckBoxToDo.setChecked(false);
-                    mCheckBoxDone.setChecked(isChecked);
-                } else if (mCheckBoxDoing.isChecked()) {
-                    mCheckBoxDoing.setChecked(false);
-                    mCheckBoxDone.setChecked(isChecked);
-                }else {
-                    mCheckBoxDone.setChecked(isChecked);
-                }
-            }
-        });
-        mCheckBoxDoing.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (mCheckBoxDone.isChecked()) {
-                        mCheckBoxDone.setChecked(false);
-                        mCheckBoxDoing.setChecked(isChecked);
-                    }else if(mCheckBoxToDo.isChecked())
-                    {
-                        mCheckBoxToDo.setChecked(false);
-                        mCheckBoxDoing.setChecked(isChecked);
-                    }else {
-                        mCheckBoxDoing.setChecked(isChecked);
-                    }
-            }
-        });
-        mCheckBoxToDo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (mCheckBoxDone.isChecked()) {
-                        mCheckBoxDone.setChecked(false);
-                        mCheckBoxToDo.setChecked(isChecked);
-
-
-                    }else if(mCheckBoxDoing.isChecked()) {
-                        mCheckBoxDoing.setChecked(false);
-                        mCheckBoxToDo.setChecked(isChecked);
-                    }else {
-                        mCheckBoxToDo.setChecked(isChecked);
-                    }
-            }
-        });
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,15 +112,14 @@ public class DiaLogFragment extends DialogFragment {
                 .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        boolean[] taskState = {mCheckBoxDoing.isChecked(), mCheckBoxDone.isChecked(), mCheckBoxToDo.isChecked()};
                         String titleEditText = mTtitleEditText.getText().toString();
                         String discriptionEditText = mDiscriptionEditText.getText().toString();
                         if (titleEditText.equals("") || discriptionEditText.equals("") || date == null) {
-                            Toast.makeText(getActivity(), "You Must Complete Eeach Field!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "You Must Complete Each Field!", Toast.LENGTH_LONG).show();
                         } else {
                             String[] forExtra = {titleEditText, discriptionEditText};
                             if (!titleEditText.equals("") && !discriptionEditText.equals("") && date != null) {
-                                sendResult(forExtra,taskState, date, time);
+                                sendResult(forExtra, date, time);
                             }
                         }
                     }
@@ -186,16 +140,13 @@ public class DiaLogFragment extends DialogFragment {
         mDiscriptionEditText = view.findViewById(R.id.dialog_discription);
         mDateButton = view.findViewById(R.id.dialog_date);
         mTimeButton = view.findViewById(R.id.dialog_time);
-        mCheckBoxToDo = view.findViewById(R.id.dialog_checkbox_todo);
-        mCheckBoxDoing = view.findViewById(R.id.dialog_checkbox_doing);
-        mCheckBoxDone = view.findViewById(R.id.dialog_checkbox_done);
+
 
     }
 
-    private void sendResult(String[] forExtra,boolean[] taskState, String date, String time) {
+    private void sendResult(String[] forExtra, String date, String time) {
         Fragment fragment = getTargetFragment();
         Intent intent = new Intent();
-        intent.putExtra(CHECKBOXES_STATE,taskState);
         intent.putExtra(TITLE_AND_DISCRIPTION, forExtra);
         intent.putExtra(DATE_FROM_DATEPICKER, date);
         intent.putExtra(TIME_FROM_TIMEPICKER, time);
