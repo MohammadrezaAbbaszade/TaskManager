@@ -1,50 +1,53 @@
 package com.example.completetask.model;
 
-import java.util.UUID;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Unique;
 
+import java.util.UUID;
+import org.greenrobot.greendao.annotation.Generated;
+@Entity
 public class User {
+    @Unique
     private String mUserName;
     private String mPassword;
     private String mTimeRegister;
-    private UUID mUUID;
-
-    public String getTimeRegister() {
-        return mTimeRegister;
+    @Id(autoincrement = true)
+    private Long mID;
+    @Generated(hash = 357683935)
+    public User(String mUserName, String mPassword, String mTimeRegister,
+            Long mID) {
+        this.mUserName = mUserName;
+        this.mPassword = mPassword;
+        this.mTimeRegister = mTimeRegister;
+        this.mID = mID;
     }
-
-    public void setTimeRegister(String timeRegister) {
-        mTimeRegister = timeRegister;
-    }
-
-    public UUID getUUID() {
-        return mUUID;
-    }
-
-    public void setUUID(UUID UUID) {
-        mUUID = UUID;
-    }
-
+    @Generated(hash = 586692638)
     public User() {
-        this(UUID.randomUUID());
     }
-
-    public User(UUID uuid) {
-        mUUID = uuid;
+    public String getMUserName() {
+        return this.mUserName;
     }
-    public String getmUserName() {
-        return mUserName;
-    }
-
-    public void setmUserName(String mUserName) {
+    public void setMUserName(String mUserName) {
         this.mUserName = mUserName;
     }
-
-    public String getmPassword() {
-        return mPassword;
+    public String getMPassword() {
+        return this.mPassword;
     }
-
-    public void setmPassword(String mPassword) {
+    public void setMPassword(String mPassword) {
         this.mPassword = mPassword;
+    }
+    public String getMTimeRegister() {
+        return this.mTimeRegister;
+    }
+    public void setMTimeRegister(String mTimeRegister) {
+        this.mTimeRegister = mTimeRegister;
+    }
+    public Long getMID() {
+        return this.mID;
+    }
+    public void setMID(Long mID) {
+        this.mID = mID;
     }
 
 }

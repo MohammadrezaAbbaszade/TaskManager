@@ -72,15 +72,15 @@ public class AdminSignUpFragment extends Fragment {
                 String password = mPasswordEditText.getText().toString();
                 String[] value = {username, password};
                 Admin admin = new Admin();
-                admin.setmUserName(username);
-                admin.setmPassword(password);
+                admin.setMUserName(username);
+                admin.setMPassword(password);
                 if (username.equals("") || password.equals("")) {
                     Toast.makeText(getActivity(), "Empty username or password", Toast.LENGTH_SHORT).show();
-                } else if (AdminRepository.getInstance(getContext()).checkUserName(username)) {
+                } else if (AdminRepository.getInstance().checkUserName(username)) {
                     Toast.makeText(getActivity(), "This Admin is Exist", Toast.LENGTH_SHORT).show();
                 } else {
                     try {
-                        AdminRepository.getInstance(getContext()).addAdmin(admin);
+                        AdminRepository.getInstance().addAdmin(admin);
                         answer = false;
                     } catch (IllegalArgumentException e) {
                         e.getMessage();

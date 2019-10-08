@@ -5,126 +5,73 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.completetask.database.TaskDBSchema;
+import com.example.completetask.database.TaskDBApplication;
 import com.example.completetask.database.TaskOpenHelper;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 public class ToDoListsRepository {
     private static ToDoListsRepository ourInstance;
-    private SQLiteDatabase mDatabase;
-    private Context mContext;
+    private DaoSession daoSession;
+    private ToDoDao toDoDao;
 
 
-    private ToDoListsRepository(Context context) {
-        mContext = context.getApplicationContext();
-        mDatabase = new TaskOpenHelper(mContext).getWritableDatabase();
+    private ToDoListsRepository() {
+        daoSession = TaskDBApplication.getInstance().getDaoSession();
+        toDoDao = daoSession.getToDoDao();
     }
-    public static ToDoListsRepository getInstance(Context context) {
+
+    public static ToDoListsRepository getInstance() {
         if (ourInstance == null) {
-            ourInstance = new ToDoListsRepository(context);
+            ourInstance = new ToDoListsRepository();
         }
         return ourInstance;
     }
-    private ToDoCursorWrapper queryToDo(String where, String[] whereArgs) {
-        Cursor cursor= mDatabase.query(TaskDBSchema.ToDo.NAME,
-                null,
-                where,
-                whereArgs,
-                null,
-                null,
-                null);
-        return new ToDoCursorWrapper(cursor);
-    }
 
     public List<ToDo> getToDoes(String username) {
-        List<ToDo> toDoList = new ArrayList<>();
-
-       ToDoCursorWrapper cursor = queryToDo(null, null);
-
-        try {
-            cursor.moveToFirst();
-
-            while (!cursor.isAfterLast()) {
-
-                toDoList.add(cursor.getToDo());
-
-                cursor.moveToNext();
-            }
-
-        } finally {
-            cursor.close();
-        }
+        List<ToDo> toDoList;
+        toDoList = toDoDao.loadAll();
         List<ToDo> mToDoList = new ArrayList<>();
         for (ToDo toDo : toDoList)
-            if (toDo.getUserName().equals(username))
+            if (toDo.getMUserName().equals(username))
                 mToDoList.add(toDo);
 
 
         return mToDoList;
     }
 
-    public ToDo getToDo(UUID uuid) {
-        String[] whereArgs = new String[]{uuid.toString()};
-        ToDoCursorWrapper cursor = queryToDo(TaskDBSchema.ToDo.Cols.UUID + " = ?", whereArgs);
+    public ToDo getToDo(Long uuid) {
 
-        try {
-            if (cursor == null || cursor.getCount() == 0)
-                return null;
-            cursor.moveToFirst();
-            return cursor.getToDo();
-
-        } finally {
-            cursor.close();
-        }
+        return toDoDao.queryBuilder()
+                .where(ToDoDao.Properties.MID.eq(uuid))
+                .unique();
     }
 
     public void insertToDo(ToDo toDo) {
-        ContentValues values = getContentValues(toDo);
-        mDatabase.insertOrThrow(TaskDBSchema.ToDo.NAME, null, values);
+        toDoDao.insert(toDo);
     }
 
     public void updateToDo(ToDo toDo) throws Exception {
-        ContentValues values = getContentValues(toDo);
-        String where = TaskDBSchema.ToDo.Cols.UUID + " = ?";
-        String[] whereArgs = new String[]{toDo.getId().toString()};
-        mDatabase.update(TaskDBSchema.ToDo.NAME, values, where, whereArgs);
+        toDoDao.update(toDo);
     }
 
     public void deleteToDo(ToDo toDo) throws Exception {
-        ToDo t = getToDo(toDo.getId());
+        ToDo t = getToDo(toDo.getMID());
         if (t == null)
-            throw new Exception("This crime does not exist!!!");
-        String where = TaskDBSchema.ToDo.Cols.UUID + " = ?";
-        String[] whereArgs = new String[]{toDo.getId().toString()};
-        mDatabase.delete(TaskDBSchema.ToDo.NAME, where, whereArgs);
+            throw new Exception("This task does not exist!!!");
+        toDoDao.delete(t);
     }
+
     public void deleteToDoes(List<ToDo> toDos) throws Exception {
-       for(ToDo t:toDos) {
-           ToDo t2=getToDo(t.getId());
-           if (t2 == null)
-               throw new Exception("You Dont Have Any Tasks  To Delete!!!");
-           String where = TaskDBSchema.ToDo.Cols.UUID + " = ?";
-           String[] whereArgs = new String[]{t.getId().toString()};
-           mDatabase.delete(TaskDBSchema.ToDo.NAME, where, whereArgs);
-       }
+        for (ToDo t : toDos) {
+            ToDo t2 = getToDo(t.getMID());
+            if (t2 == null)
+                throw new Exception("You Dont Have Any Tasks  To Delete!!!");
+            toDoDao.deleteByKey(t.getMID());
+        }
 
     }
-    private ContentValues getContentValues(ToDo toDo) {
-        ContentValues values = new ContentValues();
-        values.put(TaskDBSchema.ToDo.Cols.UUID, toDo.getId().toString());
-        values.put(TaskDBSchema.ToDo.Cols.TITLE, toDo.getTitle());
-        values.put(TaskDBSchema.ToDo.Cols.USERNAME, toDo.getUserName());
-        values.put(TaskDBSchema.ToDo.Cols.DATE, toDo.getDate());
-        values.put(TaskDBSchema.ToDo.Cols.TIME, toDo.getTime());
-        values.put(TaskDBSchema.ToDo.Cols.DOINGCHECKBOX, toDo.isDoing() ? 1 : 0);
-        values.put(TaskDBSchema.ToDo.Cols.DONECHECKBOX, toDo.isDone() ? 1 : 0);
-        values.put(TaskDBSchema.ToDo.Cols.TODOCHECKBOX, toDo.isToDo() ? 1 : 0);
-        values.put(TaskDBSchema.ToDo.Cols.DISCRIPTION, toDo.getDiscriptin());
 
-        return values;
-    }
 }

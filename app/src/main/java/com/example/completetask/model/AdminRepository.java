@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.completetask.database.TaskDBSchema;
+import com.example.completetask.database.TaskDBApplication;
 import com.example.completetask.database.TaskOpenHelper;
 
 import java.util.ArrayList;
@@ -14,96 +14,55 @@ import java.util.UUID;
 
 public class AdminRepository {
     private static AdminRepository ourInstance;
-    private SQLiteDatabase mDatabase;
-    private Context mContext;
+    private DaoSession daoSession;
+    private AdminDao adminDao;
 
 
-    private AdminRepository(Context context) {
-        mContext = context.getApplicationContext();
-        mDatabase = new TaskOpenHelper(mContext).getWritableDatabase();
+    private AdminRepository() {
+        daoSession = TaskDBApplication.getInstance().getDaoSession();
+        adminDao = daoSession.getAdminDao();
     }
 
-    public static AdminRepository getInstance(Context context) {
+    public static AdminRepository getInstance() {
         if (ourInstance == null) {
-            ourInstance = new AdminRepository(context);
+            ourInstance = new AdminRepository();
         }
         return ourInstance;
     }
+
     public void addAdmin(Admin admin) {
-        if (checkUserName(admin.getmUserName())) {
+        if (checkUserName(admin.getMUserName())) {
             throw new IllegalArgumentException("This UserName Is Exist!");
         }
 
-        ContentValues values = getContentValues(admin);
-        mDatabase.insertOrThrow(TaskDBSchema.Admin.NAME, null, values);
+        adminDao.insert(admin);
     }
+
     public boolean checkUserName(String username) {
-        List<Admin> admins =getAdmins();
+        List<Admin> admins = getAdmins();
         for (Admin admin : admins) {
-            if (admin.getmUserName().equals(username))
+            if (admin.getMUserName().equals(username))
                 return true;
         }
         return false;
     }
+
     public boolean login(String username, String password) {
-        List<Admin> admins =getAdmins();
+        List<Admin> admins = getAdmins();
         for (Admin admin : admins) {
-            if (admin.getmUserName().equals(username) &&
-                    admin.getmPassword().equals(password))
+            if (admin.getMUserName().equals(username) &&
+                    admin.getMPassword().equals(password))
                 return true;
         }
         return false;
     }
+
     public List<Admin> getAdmins() {
-        List<Admin> admins = new ArrayList<>();
-        AdminCursorWrapper cursor = queryAdmin(null, null);
-        try {
-            cursor.moveToFirst();
-
-            while (!cursor.isAfterLast()) {
-
-              admins.add(cursor.getAdmin());
-
-                cursor.moveToNext();
-            }
-
-        } finally {
-            cursor.close();
-        }
-        return admins;
-
+        return adminDao.loadAll();
     }
-    public Admin getAdmin(UUID uuid) {
-        String[] whereArgs = new String[]{uuid.toString()};
-        AdminCursorWrapper cursor = queryAdmin(TaskDBSchema.Admin.Cols.UUID + " = ?", whereArgs);
 
-        try {
-            if (cursor == null || cursor.getCount() == 0)
-                return null;
-
-            cursor.moveToFirst();
-            return cursor.getAdmin();
-
-        } finally {
-            cursor.close();
-        }
-    }
-    private AdminCursorWrapper queryAdmin(String where, String[] whereArgs) {
-        Cursor cursor= mDatabase.query(TaskDBSchema.Admin.NAME,
-                null,
-                where,
-                whereArgs,
-                null,
-                null,
-                null);
-        return new AdminCursorWrapper(cursor);
-    }
-    private ContentValues getContentValues(Admin admin) {
-        ContentValues values = new ContentValues();
-        values.put(TaskDBSchema.Admin.Cols.UUID, admin.getUUID().toString());
-        values.put(TaskDBSchema.Admin.Cols.PASSWORD, admin.getmPassword());
-        values.put(TaskDBSchema.Admin.Cols.USERNAME, admin.getmUserName());
-
-        return values;
+    public Admin getAdmin(Long uuid) {
+        return adminDao.queryBuilder()
+                .where(AdminDao.Properties.MID.eq(uuid)).unique();
     }
 }

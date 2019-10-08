@@ -1,93 +1,95 @@
 package com.example.completetask.model;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Unique;
+
 import java.sql.Time;
 import java.util.Date;
 import java.util.UUID;
-
+import org.greenrobot.greendao.annotation.Generated;
+@Entity
 public class ToDo {
-    private UUID id;
+    @Id(autoincrement = true)
+    private Long mID;
     private String mTitle;
     private String mDiscriptin;
+    @Unique
     private String mUserName;
     private String mDate;
     private String mTime;
     private boolean mIsToDo;
     private boolean mIsDoing;
     private boolean mIsDone;
-
-    public boolean isDone() {
-        return mIsDone;
+    @Generated(hash = 1680733557)
+    public ToDo(Long mID, String mTitle, String mDiscriptin, String mUserName,
+            String mDate, String mTime, boolean mIsToDo, boolean mIsDoing,
+            boolean mIsDone) {
+        this.mID = mID;
+        this.mTitle = mTitle;
+        this.mDiscriptin = mDiscriptin;
+        this.mUserName = mUserName;
+        this.mDate = mDate;
+        this.mTime = mTime;
+        this.mIsToDo = mIsToDo;
+        this.mIsDoing = mIsDoing;
+        this.mIsDone = mIsDone;
     }
-
-    public void setDone(boolean done) {
-        mIsDone = done;
-    }
-
-    public boolean isDoing() {
-        return mIsDoing;
-    }
-
-    public void setDoing(boolean doing) {
-        mIsDoing = doing;
-    }
-
+    @Generated(hash = 1151496819)
     public ToDo() {
-        this(UUID.randomUUID());
     }
-
-    public ToDo(UUID uuid) {
-       id = uuid;
+    public Long getMID() {
+        return this.mID;
     }
-
-    public UUID getId() {
-        return id;
+    public void setMID(Long mID) {
+        this.mID = mID;
     }
-
-    public String getTitle() {
-        return mTitle;
+    public String getMTitle() {
+        return this.mTitle;
     }
-
-    public void setTitle(String title) {
-        mTitle = title;
+    public void setMTitle(String mTitle) {
+        this.mTitle = mTitle;
     }
-
-    public String getDiscriptin() {
-        return mDiscriptin;
+    public String getMDiscriptin() {
+        return this.mDiscriptin;
     }
-
-    public void setDiscriptin(String discriptin) {
-        mDiscriptin = discriptin;
+    public void setMDiscriptin(String mDiscriptin) {
+        this.mDiscriptin = mDiscriptin;
     }
-
-    public String getUserName() {
-        return mUserName;
+    public String getMUserName() {
+        return this.mUserName;
     }
-
-    public void setUserName(String userName) {
-        mUserName = userName;
+    public void setMUserName(String mUserName) {
+        this.mUserName = mUserName;
     }
-
-    public String getDate() {
-        return mDate;
+    public String getMDate() {
+        return this.mDate;
     }
-
-    public void setDate(String date) {
-        mDate = date;
+    public void setMDate(String mDate) {
+        this.mDate = mDate;
     }
-
-    public String getTime() {
-        return mTime;
+    public String getMTime() {
+        return this.mTime;
     }
-
-    public void setTime(String time) {
-        mTime = time;
+    public void setMTime(String mTime) {
+        this.mTime = mTime;
     }
-
-    public boolean isToDo() {
-        return mIsToDo;
+    public boolean getMIsToDo() {
+        return this.mIsToDo;
     }
-
-    public void setToDo(boolean toDo) {
-        mIsToDo = toDo;
+    public void setMIsToDo(boolean mIsToDo) {
+        this.mIsToDo = mIsToDo;
+    }
+    public boolean getMIsDoing() {
+        return this.mIsDoing;
+    }
+    public void setMIsDoing(boolean mIsDoing) {
+        this.mIsDoing = mIsDoing;
+    }
+    public boolean getMIsDone() {
+        return this.mIsDone;
+    }
+    public void setMIsDone(boolean mIsDone) {
+        this.mIsDone = mIsDone;
     }
 }

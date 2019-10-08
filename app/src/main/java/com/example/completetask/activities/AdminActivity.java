@@ -20,7 +20,7 @@ public class AdminActivity extends SingleActivity {
     {
         Intent intent=new Intent(context,AdminActivity.class);
         intent.putExtra(VALUE_FROM_ADMIN_SIGN_UP_FRAGMENT,valueFromAdminSignUpFragment);
-        intent.putExtra(USER_FROM_ADMIN_SIGN_UP_FRAGMENT,admin.getmUserName());
+        intent.putExtra(USER_FROM_ADMIN_SIGN_UP_FRAGMENT,admin.getMUserName());
         return intent;
     }
 

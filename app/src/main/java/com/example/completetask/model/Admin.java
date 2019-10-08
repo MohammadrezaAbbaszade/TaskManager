@@ -1,40 +1,45 @@
 package com.example.completetask.model;
 
-import java.util.UUID;
+import org.greenrobot.greendao.annotation.Convert;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Unique;
 
+import java.util.UUID;
+import org.greenrobot.greendao.annotation.Generated;
+@Entity
 public class Admin {
+    @Unique
     private String mUserName;
     private String mPassword;
-    private UUID mUUID;
-
-    public UUID getUUID() {
-        return mUUID;
+    @Id(autoincrement = true)
+    private Long mID;
+    @Generated(hash = 772522839)
+    public Admin(String mUserName, String mPassword, Long mID) {
+        this.mUserName = mUserName;
+        this.mPassword = mPassword;
+        this.mID = mID;
     }
-
-    public void setUUID(UUID UUID) {
-        mUUID = UUID;
-    }
-
+    @Generated(hash = 1708792177)
     public Admin() {
-        this(UUID.randomUUID());
     }
-
-    public Admin(UUID uuid) {
-        mUUID = uuid;
+    public String getMUserName() {
+        return this.mUserName;
     }
-    public String getmUserName() {
-        return mUserName;
-    }
-
-    public void setmUserName(String mUserName) {
+    public void setMUserName(String mUserName) {
         this.mUserName = mUserName;
     }
-
-    public String getmPassword() {
-        return mPassword;
+    public String getMPassword() {
+        return this.mPassword;
     }
-
-    public void setmPassword(String mPassword) {
+    public void setMPassword(String mPassword) {
         this.mPassword = mPassword;
     }
+    public Long getMID() {
+        return this.mID;
+    }
+    public void setMID(Long mID) {
+        this.mID = mID;
+    }
+
 }

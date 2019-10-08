@@ -82,7 +82,7 @@ public class AdminFragment extends Fragment {
             public void onClick(View view) {
                 String usrname = mUserNameEditText.getText().toString();
                 String password = mPasswordEditText.getText().toString();
-                if (AdminRepository.getInstance(getContext()).login(usrname, password)) {
+                if (AdminRepository.getInstance().login(usrname, password)) {
                     Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     Intent intent = AdminPagerActivity.newIntent(getActivity(), usrname);
                     startActivity(intent);

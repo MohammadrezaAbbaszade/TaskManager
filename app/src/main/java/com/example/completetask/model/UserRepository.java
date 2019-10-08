@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.completetask.database.TaskDBSchema;
+import com.example.completetask.database.TaskDBApplication;
 import com.example.completetask.database.TaskOpenHelper;
 
 import java.util.ArrayList;
@@ -14,33 +14,32 @@ import java.util.UUID;
 
 public class UserRepository {
     private static UserRepository ourInstance;
-    private SQLiteDatabase mDatabase;
-    private Context mContext;
+    private DaoSession daoSession;
+    private UserDao userDao;
 
 
-    private UserRepository(Context context) {
-        mContext = context.getApplicationContext();
-        mDatabase = new TaskOpenHelper(mContext).getWritableDatabase();
+    private UserRepository() {
+        daoSession = TaskDBApplication.getInstance().getDaoSession();
+        userDao = daoSession.getUserDao();
     }
 
-    public static UserRepository getInstance(Context context) {
+    public static UserRepository getInstance() {
         if (ourInstance == null) {
-            ourInstance = new UserRepository(context);
+            ourInstance = new UserRepository();
         }
         return ourInstance;
     }
     public void addUser(User user) {
-        if (checkUserName(user.getmUserName())) {
+        if (checkUserName(user.getMUserName())) {
             throw new IllegalArgumentException("This UserName Is Exist!");
         }
 
-        ContentValues values = getContentValues(user);
-        mDatabase.insertOrThrow(TaskDBSchema.User.NAME, null, values);
+       userDao.insert(user);
     }
     public boolean checkUserName(String username) {
         List<User> users =getmUsers();
         for (User user : users) {
-            if (user.getmUserName().equals(username))
+            if (user.getMUserName().equals(username))
                 return true;
         }
         return false;
@@ -48,71 +47,23 @@ public class UserRepository {
     public boolean login(String username, String password) {
         List<User> users =getmUsers();
         for (User user : users) {
-            if (user.getmUserName().equals(username) &&
-                    user.getmPassword().equals(password))
+            if (user.getMUserName().equals(username) &&
+                    user.getMPassword().equals(password))
                 return true;
         }
         return false;
     }
     public List<User> getmUsers() {
-        List<User> users = new ArrayList<>();
-       UserCursorWrapper cursor = queryUser(null, null);
-        try {
-            cursor.moveToFirst();
-
-            while (!cursor.isAfterLast()) {
-
-                users.add(cursor.getUser());
-
-                cursor.moveToNext();
-            }
-
-        } finally {
-            cursor.close();
-        }
-        return users;
-
+      return userDao.loadAll();
     }
-    public User getUser(UUID uuid) {
-        String[] whereArgs = new String[]{uuid.toString()};
-       UserCursorWrapper cursor = queryUser(TaskDBSchema.User.Cols.UUID + " = ?", whereArgs);
-
-        try {
-            if (cursor == null || cursor.getCount() == 0)
-                return null;
-
-            cursor.moveToFirst();
-            return cursor.getUser();
-
-        } finally {
-            cursor.close();
-        }
+    public User getUser(Long uuid) {
+      return userDao.queryBuilder()
+              .where(UserDao.Properties.MID.eq(uuid)).unique();
     }
     public void deleteUser(User user) throws Exception {
-        User u = getUser(user.getUUID());
+        User u = getUser(user.getMID());
         if (u == null)
             throw new Exception("This crime does not exist!!!");
-        String where = TaskDBSchema.User.Cols.UUID + " = ?";
-        String[] whereArgs = new String[]{user.getUUID().toString()};
-        mDatabase.delete(TaskDBSchema.User.NAME, where, whereArgs);
-    }
-    private UserCursorWrapper queryUser(String where, String[] whereArgs) {
-        Cursor cursor= mDatabase.query(TaskDBSchema.User.NAME,
-                null,
-                where,
-                whereArgs,
-                null,
-                null,
-                null);
-        return new UserCursorWrapper(cursor);
-    }
-    private ContentValues getContentValues(User user) {
-        ContentValues values = new ContentValues();
-        values.put(TaskDBSchema.User.Cols.UUID, user.getUUID().toString());
-        values.put(TaskDBSchema.User.Cols.PASSWORD, user.getmPassword());
-        values.put(TaskDBSchema.User.Cols.USERNAME, user.getmUserName());
-        values.put(TaskDBSchema.User.Cols .TIMETOREGISTER, user.getTimeRegister());
-
-        return values;
+        userDao.delete(u);
     }
 }

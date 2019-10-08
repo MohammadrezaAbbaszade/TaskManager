@@ -142,8 +142,8 @@ public class DoingListFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ChangeDialogFragment changeDialogFragment = ChangeDialogFragment.newInstance(mDoing.getTitle()
-                            , mDoing.getDiscriptin(), mDoing.getDate(), mDoing.getTime(), userNameOfUser, mDoing.getUUID(), 3);
+                    ChangeDialogFragment changeDialogFragment = ChangeDialogFragment.newInstance(mDoing.getMTitle()
+                            , mDoing.getMDiscriptin(), mDoing.getMDate(), mDoing.getMTime(), userNameOfUser, mDoing.getMID(), 3);
                     changeDialogFragment.setTargetFragment(DoingListFragment.this, REQUEST_CODE_FOR_CHANGE_FRAGMENT);
                     changeDialogFragment.show(getFragmentManager(), CHANGE_DIALOG_FRAGMENT_TAG);
 
@@ -152,13 +152,13 @@ public class DoingListFragment extends Fragment {
         }
 
         public void bind(Doing doing) {
-            Character shapeText = doing.getTitle().charAt(0);
+            Character shapeText = doing.getMTitle().charAt(0);
             String stringForShapeText = shapeText.toString();
-            mItemTitleTextView.setText(doing.getTitle());
-            mItemDiscriptionTextView.setText(doing.getDiscriptin());
+            mItemTitleTextView.setText(doing.getMTitle());
+            mItemDiscriptionTextView.setText(doing.getMDiscriptin());
             mItemShapeTextView.setText(stringForShapeText);
             mState.setText(R.string.doing);
-            mItemDateTextView.setText(doing.getDate()+","+doing.getTime());
+            mItemDateTextView.setText(doing.getMDate()+","+doing.getMTime());
             mDoing = doing;
         }
     }
@@ -218,21 +218,21 @@ public class DoingListFragment extends Fragment {
             , String timeFromDialogFragment) {
         mDoing = new Doing();
         if (valueFromDiaLogFragment != null) {
-            mDoing.setTitle(valueFromDiaLogFragment[0]);
-            mDoing.setDiscriptin(valueFromDiaLogFragment[1]);
-            mDoing.setUserName(userNameOfUser);
-            mDoing.setDoing(true);
+            mDoing.setMTitle(valueFromDiaLogFragment[0]);
+            mDoing.setMDiscriptin(valueFromDiaLogFragment[1]);
+            mDoing.setMUserName(userNameOfUser);
+            mDoing.setMIsDoing(true);
         }
         if (dateFromDialogFragment != null && timeFromDialogFragment != null) {
-            mDoing.setDate(dateFromDialogFragment);
-            mDoing.setTime(timeFromDialogFragment);
+            mDoing.setMDate(dateFromDialogFragment);
+            mDoing.setMTime(timeFromDialogFragment);
         }
-        DoingListsRepository.getInstance(getContext()).insertDoing(mDoing);
+        DoingListsRepository.getInstance().insertDoing(mDoing);
         creatRecycler();
     }
 
     private void creatRecycler() {
-        mDoingList = DoingListsRepository.getInstance(getContext()).getDoings(userNameOfUser);
+        mDoingList = DoingListsRepository.getInstance().getDoings(userNameOfUser);
         if (mDoingList.size() == 0) {
             mEmptyText.setVisibility(View.VISIBLE);
         } else {
@@ -248,8 +248,8 @@ public class DoingListFragment extends Fragment {
         dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 try {
-                    List<Doing> mDoingList = DoingListsRepository.getInstance(getContext()).getDoings(userNameOfUser);
-                    DoingListsRepository.getInstance(getContext()).deleteDoings(mDoingList);
+                    List<Doing> mDoingList = DoingListsRepository.getInstance().getDoings(userNameOfUser);
+                    DoingListsRepository.getInstance().deleteDoings(mDoingList);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -156,8 +156,8 @@ public class TodoListFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ChangeDialogFragment changeDialogFragment = ChangeDialogFragment.newInstance(mToDo.getTitle()
-                            , mToDo.getDiscriptin(), mToDo.getDate(), mToDo.getTime(), userNameOfUser, mToDo.getId(), 1);
+                    ChangeDialogFragment changeDialogFragment = ChangeDialogFragment.newInstance(mToDo.getMTitle()
+                            , mToDo.getMDiscriptin(), mToDo.getMDate(), mToDo.getMTime(), userNameOfUser, mToDo.getMID(), 1);
                     changeDialogFragment.setTargetFragment(TodoListFragment.this, REQUEST_CODE_FOR_CHANGE_FRAGMENT);
                     currentPosition = getAdapterPosition();
                     changeDialogFragment.show(getFragmentManager(), CHANGE_DIALOG_FRAGMENT_TAG);
@@ -167,13 +167,13 @@ public class TodoListFragment extends Fragment {
         }
 
         public void bind(ToDo toDo) {
-            Character shapeText = toDo.getTitle().charAt(0);
+            Character shapeText = toDo.getMTitle().charAt(0);
             String stringForShapeText = shapeText.toString();
-            mItemTitleTextView.setText(toDo.getTitle());
-            mItemDiscriptionTextView.setText(toDo.getDiscriptin());
+            mItemTitleTextView.setText(toDo.getMTitle());
+            mItemDiscriptionTextView.setText(toDo.getMDiscriptin());
             mItemShapeTextView.setText(stringForShapeText);
             mState.setText(R.string.todo);
-            mItemDateTextView.setText(toDo.getDate()+","+toDo.getTime());
+            mItemDateTextView.setText(toDo.getMDate()+","+toDo.getMTime());
             mToDo = toDo;
         }
     }
@@ -232,21 +232,21 @@ public class TodoListFragment extends Fragment {
             , String timeFromDialogFragment) {
         mToDo = new ToDo();
         if (valueFromDiaLogFragment != null) {
-            mToDo.setTitle(valueFromDiaLogFragment[0]);
-            mToDo.setDiscriptin(valueFromDiaLogFragment[1]);
-            mToDo.setUserName(userNameOfUser);
-            mToDo.setToDo(true);
+            mToDo.setMTitle(valueFromDiaLogFragment[0]);
+            mToDo.setMDiscriptin(valueFromDiaLogFragment[1]);
+            mToDo.setMUserName(userNameOfUser);
+            mToDo.setMIsToDo(true);
         }
         if (dateFromDialogFragment != null && timeFromDialogFragment != null) {
-            mToDo.setDate(dateFromDialogFragment);
-            mToDo.setTime(timeFromDialogFragment);
+            mToDo.setMDate(dateFromDialogFragment);
+            mToDo.setMTime(timeFromDialogFragment);
         }
-        ToDoListsRepository.getInstance(getContext()).insertToDo(mToDo);
+        ToDoListsRepository.getInstance().insertToDo(mToDo);
         creatRecycler();
     }
 
     private void creatRecycler() {
-        mToDoList = ToDoListsRepository.getInstance(getContext()).getToDoes(userNameOfUser);
+        mToDoList = ToDoListsRepository.getInstance().getToDoes(userNameOfUser);
         if (mToDoList.size() == 0) {
             mEmptyText.setVisibility(View.VISIBLE);
         } else {
@@ -263,8 +263,8 @@ public class TodoListFragment extends Fragment {
         dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 try {
-                    List<ToDo> mToDoList = ToDoListsRepository.getInstance(getContext()).getToDoes(userNameOfUser);
-                    ToDoListsRepository.getInstance(getContext()).deleteToDoes(mToDoList);
+                    List<ToDo> mToDoList = ToDoListsRepository.getInstance().getToDoes(userNameOfUser);
+                    ToDoListsRepository.getInstance().deleteToDoes(mToDoList);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

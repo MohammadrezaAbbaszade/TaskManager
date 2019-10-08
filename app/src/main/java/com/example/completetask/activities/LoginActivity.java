@@ -19,7 +19,7 @@ public class LoginActivity extends SingleActivity {
 {
     Intent intent=new Intent(context,LoginActivity.class);
     intent.putExtra(VALUE_FROM_SIGN_UP_FRAGMENT,valueFromSignUpFragment);
-    intent.putExtra(USER_FROM_SIGN_UP_FRAGMENT,user.getmUserName());
+    intent.putExtra(USER_FROM_SIGN_UP_FRAGMENT,user.getMUserName());
     return intent;
 }
 

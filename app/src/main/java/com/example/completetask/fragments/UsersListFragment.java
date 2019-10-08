@@ -114,7 +114,7 @@ public class UsersListFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = UsersTasksActivity.newIntent(getContext(), mUser.getmUserName());
+                    Intent intent = UsersTasksActivity.newIntent(getContext(), mUser.getMUserName());
                     startActivity(intent);
                 }
             });
@@ -128,11 +128,11 @@ public class UsersListFragment extends Fragment {
         }
 
         public void bind(User user) {
-            Character shapeText = user.getmUserName().charAt(0);
+            Character shapeText = user.getMUserName().charAt(0);
             String stringForShapeText = shapeText.toString();
-            mItemTitleTextView.setText(user.getmUserName());
+            mItemTitleTextView.setText(user.getMUserName());
             mItemShapeTextView.setText(stringForShapeText);
-            mItemDateTextView.setText(user.getTimeRegister());
+            mItemDateTextView.setText(user.getMTimeRegister());
             mUser = user;
         }
     }
@@ -170,7 +170,7 @@ public class UsersListFragment extends Fragment {
     }
 
     private void creatRecycler() {
-        mUserList = UserRepository.getInstance(getContext()).getmUsers();
+        mUserList = UserRepository.getInstance().getmUsers();
         if (mUserList.size() == 0) {
             mEmptyText.setVisibility(View.VISIBLE);
         } else {
@@ -188,7 +188,7 @@ public class UsersListFragment extends Fragment {
             public void onClick(DialogInterface dialog, int whichButton) {
                 try {
                     deleteTasks(mUser);
-                    UserRepository.getInstance(getContext()).deleteUser(mUser);
+                    UserRepository.getInstance().deleteUser(mUser);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -214,7 +214,7 @@ public class UsersListFragment extends Fragment {
                         deleteTasks(mUserList.get(i));
                     }
                     for(int i=0;i<mUserList.size();i++) {
-                        UserRepository.getInstance(getContext()).deleteUser(mUserList.get(i));
+                        UserRepository.getInstance().deleteUser(mUserList.get(i));
                     }
 
                 } catch (Exception e) {
@@ -233,23 +233,23 @@ public class UsersListFragment extends Fragment {
         dlgAlert.show();
     }
     private void deleteTasks(User mUser) throws Exception {
-        List<ToDo> mToDoList = ToDoListsRepository.getInstance(getContext()).getToDoes(mUser.getmUserName());
+        List<ToDo> mToDoList = ToDoListsRepository.getInstance().getToDoes(mUser.getMUserName());
         if (mToDoList.size() != 0){
-            ToDoListsRepository.getInstance(getContext()).deleteToDoes(mToDoList);
+            ToDoListsRepository.getInstance().deleteToDoes(mToDoList);
     }
 
-    List<Doing> mDoingList = DoingListsRepository.getInstance(getContext()).getDoings(mUser.getmUserName());
+    List<Doing> mDoingList = DoingListsRepository.getInstance().getDoings(mUser.getMUserName());
        if(mDoingList.size()!=0)
 
     {
-        DoingListsRepository.getInstance(getContext()).deleteDoings(mDoingList);
+        DoingListsRepository.getInstance().deleteDoings(mDoingList);
     }
 
-        List<Done> mDoneList = DoneListsRepository.getInstance(getContext()).getDones(mUser.getmUserName());
+        List<Done> mDoneList = DoneListsRepository.getInstance().getDones(mUser.getMUserName());
         if(mDoneList.size()!=0)
 
         {
-            DoneListsRepository.getInstance(getContext()).deleteDones(mDoneList);
+            DoneListsRepository.getInstance().deleteDones(mDoneList);
         }
 
 

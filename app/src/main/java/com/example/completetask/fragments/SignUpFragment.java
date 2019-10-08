@@ -72,16 +72,16 @@ public class SignUpFragment extends Fragment {
                 String password = mPasswordEditText.getText().toString();
                 String[] value = {username, password};
                 User user = new User();
-                user.setmUserName(username);
-                user.setmPassword(password);
+                user.setMUserName(username);
+                user.setMPassword(password);
                 initDate(user);
                 if (username.equals("") || password.equals("")) {
                     Toast.makeText(getActivity(), "Empty username or password", Toast.LENGTH_SHORT).show();
-                } else if (UserRepository.getInstance(getContext()).checkUserName(username)) {
+                } else if (UserRepository.getInstance().checkUserName(username)) {
                     Toast.makeText(getActivity(), "This UserName is Exist", Toast.LENGTH_SHORT).show();
                 } else {
                     try {
-                        UserRepository.getInstance(getContext()).addUser(user);
+                        UserRepository.getInstance().addUser(user);
                         answer = false;
                     } catch (IllegalArgumentException e) {
                         e.getMessage();
@@ -110,6 +110,6 @@ public class SignUpFragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss",Locale.US);
         String dateString =formatter.format(calendar.getTime());
-        user.setTimeRegister(dateString);
+        user.setMTimeRegister(dateString);
     }
 }
