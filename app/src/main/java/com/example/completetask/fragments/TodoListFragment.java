@@ -2,6 +2,7 @@ package com.example.completetask.fragments;
 
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +24,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -62,7 +65,8 @@ public class TodoListFragment extends Fragment {
     private String userNameOfUser;
     private ToDoAdaptor toDoAdaptor;
     private CardView mCardView;
-
+    private SearchView.OnQueryTextListener queryTextListener;
+    private SearchView searchView;
     public static TodoListFragment newInstance(String userNameOfUser) {
 
         Bundle args = new Bundle();
@@ -94,7 +98,33 @@ public class TodoListFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.search_menu);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+        }
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+            queryTextListener = new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    toDoAdaptor.getFilter().filter(newText);
+
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    toDoAdaptor.getFilter().filter(query);
+
+                    return true;
+                }
+            };
+            searchView.setOnQueryTextListener(queryTextListener);
+        }
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -106,10 +136,11 @@ public class TodoListFragment extends Fragment {
             case R.id.log_out_menu:
                 getActivity().finish();
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            case R.id.search_menu:
+                return true;
         }
-
+        searchView.setOnQueryTextListener(queryTextListener);
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -178,11 +209,12 @@ public class TodoListFragment extends Fragment {
         }
     }
 
-    private class ToDoAdaptor extends RecyclerView.Adapter<ToDoHolder> {
+    private class ToDoAdaptor extends RecyclerView.Adapter<ToDoHolder> implements Filterable {
         private List<ToDo> mToDoList;
-
+        private List<ToDo> mToDoListFiltered;
         public ToDoAdaptor(List<ToDo> toDoList) {
             mToDoList = toDoList;
+            mToDoListFiltered=toDoList;
         }
 
         @NonNull
@@ -195,16 +227,51 @@ public class TodoListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull ToDoHolder holder, int position) {
-            holder.bind(mToDoList.get(position));
+            holder.bind(mToDoListFiltered.get(position));
         }
 
         @Override
         public int getItemCount() {
-            if (mToDoList.size() != 0)
-                return mToDoList.size();
+            if (mToDoListFiltered.size() != 0)
+                return mToDoListFiltered.size();
 
 
             return 0;
+        }
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence charSequence) {
+                    String charString = charSequence.toString();
+                    if (charString.isEmpty()) {
+                        mToDoListFiltered=mToDoList;
+                    } else {
+                        List<ToDo> filteredList = new ArrayList<>();
+                        for (ToDo row : mToDoList) {
+
+                            // name match condition. this might differ depending on your requirement
+                            // here we are looking for name or phone number match
+                            if (row.getMTitle().toLowerCase().contains(charString.toLowerCase()) || row.getMDiscriptin().contains(charSequence)||
+                            row.getMDate().toLowerCase().contains(charString.toLowerCase())||row.getMTime().toLowerCase().contains(charString.toLowerCase()) ) {
+                                filteredList.add(row);
+                            }
+                        }
+
+                        mToDoListFiltered = filteredList;
+                    }
+
+                    FilterResults filterResults = new FilterResults();
+                    filterResults.values = mToDoListFiltered;
+                    return filterResults;
+                }
+
+                @Override
+                protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                    mToDoListFiltered = (ArrayList<ToDo>) filterResults.values;
+                    notifyDataSetChanged();
+                }
+            };
         }
     }
 

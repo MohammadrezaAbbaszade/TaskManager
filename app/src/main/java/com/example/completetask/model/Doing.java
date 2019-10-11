@@ -16,7 +16,6 @@ public class Doing {
     private String mDiscriptin;
     private String mDate;
     private String mTime;
-    @Unique
     private String mUserName;
     private boolean mIsDoing;
     private boolean mIsDone;

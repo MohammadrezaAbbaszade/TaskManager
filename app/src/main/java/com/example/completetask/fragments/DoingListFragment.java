@@ -2,6 +2,7 @@ package com.example.completetask.fragments;
 
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,7 +22,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.completetask.R;
@@ -33,6 +37,7 @@ import com.example.completetask.model.ToDo;
 import com.example.completetask.model.ToDoListsRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,6 +58,8 @@ public class DoingListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private DoingAdaptor doingAdaptor;
     private ImageView mEmptyText;
+    private SearchView.OnQueryTextListener queryTextListener;
+    private SearchView searchView;
     public static DoingListFragment newInstance(String userNameOfUser) {
 
         Bundle args = new Bundle();
@@ -81,7 +88,33 @@ public class DoingListFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.search_menu);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+        }
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+            queryTextListener = new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    doingAdaptor.getFilter().filter(newText);
+
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    doingAdaptor.getFilter().filter(query);
+
+                    return true;
+                }
+            };
+            searchView.setOnQueryTextListener(queryTextListener);
+        }
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -93,9 +126,11 @@ public class DoingListFragment extends Fragment {
             case R.id.log_out_menu:
                 getActivity().finish();
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            case R.id.search_menu:
+                return true;
         }
+        searchView.setOnQueryTextListener(queryTextListener);
+        return super.onOptionsItemSelected(item);
 
     }
 
@@ -163,11 +198,12 @@ public class DoingListFragment extends Fragment {
         }
     }
 
-    private class DoingAdaptor extends RecyclerView.Adapter<DoingHolder> {
+    private class DoingAdaptor extends RecyclerView.Adapter<DoingHolder> implements Filterable {
         private List<Doing> mDoingList;
-
+        private List<Doing> mDoingListFiltered;
         public DoingAdaptor(List<Doing> doingList) {
             mDoingList = doingList;
+            mDoingListFiltered=doingList;
         }
 
 
@@ -181,16 +217,51 @@ public class DoingListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull DoingHolder holder, int position) {
-            holder.bind(mDoingList.get(position));
+            holder.bind(mDoingListFiltered.get(position));
         }
 
         @Override
         public int getItemCount() {
-            if (mDoingList.size() != 0)
-                return mDoingList.size();
+            if (mDoingListFiltered.size() != 0)
+                return mDoingListFiltered.size();
 
 
             return 0;
+        }
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence charSequence) {
+                    String charString = charSequence.toString();
+                    if (charString.isEmpty()) {
+                        mDoingListFiltered=mDoingList;
+                    } else {
+                        List<Doing> filteredList = new ArrayList<>();
+                        for (Doing row : mDoingList) {
+
+                            // name match condition. this might differ depending on your requirement
+                            // here we are looking for name or phone number match
+                            if (row.getMTitle().toLowerCase().contains(charString.toLowerCase()) || row.getMDiscriptin().contains(charSequence)||
+                                    row.getMDate().toLowerCase().contains(charString.toLowerCase())||row.getMTime().toLowerCase().contains(charString.toLowerCase()) ) {
+                                filteredList.add(row);
+                            }
+                        }
+
+                        mDoingListFiltered = filteredList;
+                    }
+
+                    FilterResults filterResults = new FilterResults();
+                    filterResults.values = mDoingListFiltered;
+                    return filterResults;
+                }
+
+                @Override
+                protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                    mDoingListFiltered = (ArrayList<Doing>) filterResults.values;
+                    notifyDataSetChanged();
+                }
+            };
         }
     }
 

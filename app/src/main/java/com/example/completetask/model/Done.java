@@ -16,7 +16,6 @@ public class Done {
     private Long mID;
     private String mTitle;
     private String mDiscriptin;
-    @Unique
     private String mUserName;
     private String mDate;
     private String mTime;
