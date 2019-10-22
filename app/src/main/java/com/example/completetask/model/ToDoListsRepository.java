@@ -31,15 +31,8 @@ public class ToDoListsRepository {
     }
 
     public List<ToDo> getToDoes(String username) {
-        List<ToDo> toDoList;
-        toDoList = toDoDao.loadAll();
-        List<ToDo> mToDoList = new ArrayList<>();
-        for (ToDo toDo : toDoList)
-            if (toDo.getMUserName().equals(username))
-                mToDoList.add(toDo);
-
-
-        return mToDoList;
+        return toDoDao.queryBuilder()
+                .where(ToDoDao.Properties.MUserName.eq(username)).list();
     }
 
     public ToDo getToDo(Long uuid) {

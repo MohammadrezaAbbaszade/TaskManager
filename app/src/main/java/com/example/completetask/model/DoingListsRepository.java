@@ -31,15 +31,8 @@ public class DoingListsRepository {
     }
 
     public List<Doing> getDoings(String username) {
-        List<Doing> doingList;
-        doingList = doingDao.loadAll();
-        List<Doing> mDoingList = new ArrayList<>();
-        for (Doing doing : doingList)
-            if (doing.getMUserName().equals(username))
-                mDoingList.add(doing);
-
-
-        return mDoingList;
+        return doingDao.queryBuilder()
+                .where(DoingDao.Properties.MUserName.eq(username)).list();
     }
 
     public Doing getDoing(Long uuid) {

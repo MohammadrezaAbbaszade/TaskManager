@@ -31,16 +31,8 @@ public class DoneListsRepository {
     }
 
     public List<Done> getDones(String username) {
-        List<Done> doneList;
-        doneList = doneDao.loadAll();
-        List<Done> mDoneList = new ArrayList<>();
-        for (Done done : doneList)
-            if (done.getMUserName().equals(username))
-                mDoneList.add(done);
-
-
-        return mDoneList;
-
+        return doneDao.queryBuilder()
+                .where(DoneDao.Properties.MUserName.eq(username)).list();
     }
 
     public Done getDone(Long uuid) {
