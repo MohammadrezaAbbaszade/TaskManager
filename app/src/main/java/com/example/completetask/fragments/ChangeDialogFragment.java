@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.completetask.R;
@@ -70,6 +71,12 @@ public class ChangeDialogFragment extends DiaLogFragment {
     private Done mDone;
     private int indexOfFragments;
     private String userName;
+    private ImageButton mShareImageButton;
+    String titleForSshare;
+    String discriptionForSshare;
+    String dateForSshare;
+    String timeForSshare;
+    String stateForSshare;
 
     public static ChangeDialogFragment newInstance(String titleFromFragments, String discriptionFromFragments
             , String date, String time, String userOfUser, Long idOfTasks, int indexOfFragments) {
@@ -102,7 +109,7 @@ public class ChangeDialogFragment extends DiaLogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Long idOfTasks =  getArguments().getLong(ID_OF_TASKS);
+        Long idOfTasks = getArguments().getLong(ID_OF_TASKS);
         date = getArguments().getString(DATE);
         time = getArguments().getString(TIME);
         indexOfFragments = getArguments().getInt(INDEX_OF_FRAGMENTS);
@@ -151,6 +158,27 @@ public class ChangeDialogFragment extends DiaLogFragment {
         alertDialog = new AlertDialog.Builder(getActivity())
                 .setView(view)
                 .create();
+        mShareImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               switch (indexOfFragments)
+               {
+                   case 1:
+                       updateReposiory(1);
+                   case 2:
+                       updateReposiory(2);
+                   case 3:
+                       updateReposiory(3);
+               }
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, getTaskReport());
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Task Detail");
+                intent = Intent.createChooser(intent, "Sent Task Detail via");
+
+                startActivity(intent);
+            }
+        });
         mTtitleEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -410,6 +438,7 @@ public class ChangeDialogFragment extends DiaLogFragment {
         mCheckBoxToDo = view.findViewById(R.id.change_dialog_checkbox_todo);
         mCheckBoxDoing = view.findViewById(R.id.change_dialog_checkbox_doing);
         mCheckBoxDone = view.findViewById(R.id.change_dialog_checkbox_done);
+        mShareImageButton = view.findViewById(R.id.share);
     }
 
     private void sendResult() {
@@ -471,7 +500,6 @@ public class ChangeDialogFragment extends DiaLogFragment {
         }
 
     }
-
     private void setObjectsFoeRepository(int indexOfFragments, int indexOfTabs) {
         if (indexOfFragments == 1 && indexOfTabs == 2) {
             Doing doing = new Doing();
@@ -509,7 +537,7 @@ public class ChangeDialogFragment extends DiaLogFragment {
             toDo.setMTime(mDone.getMTime());
             toDo.setMDate(mDone.getMDate());
             ToDoListsRepository.getInstance().insertToDo(toDo);
-        }else if (indexOfFragments == 2 && indexOfTabs == 1) {
+        } else if (indexOfFragments == 2 && indexOfTabs == 1) {
             ToDo toDo = new ToDo();
             toDo.setMIsToDo(true);
             toDo.setMTitle(mDoing.getMTitle());
@@ -518,7 +546,7 @@ public class ChangeDialogFragment extends DiaLogFragment {
             toDo.setMTime(mDoing.getMTime());
             toDo.setMDate(mDoing.getMDate());
             ToDoListsRepository.getInstance().insertToDo(toDo);
-        }else {
+        } else {
             Done done = new Done();
             done.setMIsDone(true);
             done.setMTitle(mDoing.getMTitle());
@@ -531,6 +559,43 @@ public class ChangeDialogFragment extends DiaLogFragment {
 
 
     }
+
+    private String getTaskReport() {
+        if(indexOfFragments==1)
+        {
+            titleForSshare = mToDo.getMTitle();
+            discriptionForSshare = mToDo.getMDiscriptin();
+            dateForSshare = mToDo.getMDate();
+            timeForSshare = mToDo.getMTime();
+            stateForSshare = "ToDo";
+        }else if(indexOfFragments==2)
+        {
+            titleForSshare = mDone.getMTitle();
+            discriptionForSshare = mDone.getMDiscriptin();
+            dateForSshare = mDone.getMDate();
+            timeForSshare = mDone.getMTime();
+            stateForSshare = "Done";
+        }else
+        {
+            titleForSshare = mDoing.getMTitle();
+            discriptionForSshare = mDoing.getMDiscriptin();
+            dateForSshare = mDoing.getMDate();
+            timeForSshare = mDoing.getMTime();
+            stateForSshare = "Doing";
+        }
+        return String.format("Task Detail:" + " " + "%n"
+                        + "Title:" + " " + "%s" + "%n"
+                        + "Discription:" + " " + "%s" + "%n"
+                        + "Date:" + " " + "%s" + "%n"
+                        + "Time:" + " " + "%s" + "%n"
+                        + "State:" + " " + "%s"
+                , titleForSshare
+                , discriptionForSshare
+                , dateForSshare
+                , timeForSshare
+                , stateForSshare);
+    }
+
 }
 
 
